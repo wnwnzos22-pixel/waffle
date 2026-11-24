@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Full Report · Rewatch Impact Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: sticky chapter nav, dark hero with the four headline numbers, then one chapter per stage of the analysis, in the order the work was done. */
+:root{
+  --bg:#F6F4F5; --card:#FFFFFF; --fg:#17151A; --muted:#6B6571; --line:#E4E0E3; --line2:#EDEAEC;
+  --accent:#E3176E; --accent-soft:#FCE6F0; --accent-fg:#B30F55;
+  --neg:#D3302B; --neg-soft:#FCEAE9;
+  --pos:#0C8A80; --pos-soft:#DFF3F1;
+  --warn:#9A6200; --warn-soft:#FFF1D6;
+  --hero-bg:#121013; --hero-fg:#F7F4F6; --hero-muted:#B3ACB5; --hero-line:#2E2A32;
+  --nav-bg:rgba(246,244,245,.88);
+  --f-body:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  --f-num:'Space Grotesk','Noto Sans KR',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E0D10; --card:#18161B; --fg:#F2EFF3; --muted:#A39CA8; --line:#2C2931; --line2:#242128;
+  --accent:#FF4C98; --accent-soft:#3A1527; --accent-fg:#FF8FBF;
+  --neg:#FF7A73; --neg-soft:#35191A;
+  --pos:#4FD1C5; --pos-soft:#11302D;
+  --warn:#F2B84B; --warn-soft:#33270E;
+  --nav-bg:rgba(14,13,16,.88); color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0E0D10; --card:#18161B; --fg:#F2EFF3; --muted:#A39CA8; --line:#2C2931; --line2:#242128;
+  --accent:#FF4C98; --accent-soft:#3A1527; --accent-fg:#FF8FBF;
+  --neg:#FF7A73; --neg-soft:#35191A;
+  --pos:#4FD1C5; --pos-soft:#11302D;
+  --warn:#F2B84B; --warn-soft:#33270E;
+  --nav-bg:rgba(14,13,16,.88); color-scheme:dark;}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.65;word-break:keep-all;overflow-wrap:break-word}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--nav-bg);backdrop-filter:blur(10px)}
+h1,h2,h3,h4,p{margin:0}
+h1,h2,h3{text-wrap:balance}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.sh{display:inline-block;width:1em;height:1em;vertical-align:-.14em}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--nav-bg);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:20px;height:56px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;white-space:nowrap;text-decoration:none;letter-spacing:.02em}
+.brand svg{width:44px;height:16px;flex:none}
+.brand span{color:var(--muted);font-weight:500}
+.chips{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none;min-width:0}
+.chips::-webkit-scrollbar{display:none}
+.chips a{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap}
+.chips a:hover{color:var(--fg)}
+.chips a.on{background:var(--fg);color:var(--bg)}
+@media (max-width:760px){.nav .wrap{gap:10px}}
+
+/* brand lockup */
+.nav .wrap{height:62px}
+.brand{flex:none}
+.brand .lg{font-size:28px;line-height:1;display:block;position:relative;top:-9px}
+.brand .bt{display:flex;flex-direction:column;line-height:1.25;color:var(--fg);font-weight:700}
+.brand .bt b{font-size:17px;font-weight:900;letter-spacing:-.01em}
+.brand .bt small{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:0}
+@media (max-width:1040px){
+.nav .wrap{flex-wrap:wrap;height:auto;gap:2px;padding-block:8px 6px}
+.brand{flex:1 1 100%;min-width:0;white-space:normal}
+.brand .bt{min-width:0}
+.chips{flex:1 1 100%;margin-left:0}
+.chips a{padding:5px 11px}
+section.ch,.rs{scroll-margin-top:112px}
+.toc{top:calc(104px + env(safe-area-inset-top,0px))}
+}
+@media (max-width:480px){.brand .bt small{font-size:11px;line-height:1.35}}
+/* hero */
+.hero{background:var(--hero-bg);color:var(--hero-fg);padding-block:56px 48px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--hero-muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.eyebrow b{color:#FF4C98}
+.hero h1{font-size:clamp(30px,5.2vw,52px);line-height:1.2;font-weight:900;margin-top:18px;letter-spacing:-.02em;max-width:18em}
+.hero h1 em{font-style:normal;color:#FF4C98}
+.hero .sub{margin-top:16px;color:var(--hero-muted);max-width:40em;font-size:16px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.meta span{border:1px solid var(--hero-line);border-radius:99px;padding:4px 12px;font-size:13px;color:var(--hero-muted)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:40px}
+.kpi{border:1px solid var(--hero-line);border-radius:14px;padding:18px 18px 16px;background:#1A171C}
+.kpi .sh{color:#FF4C98;width:18px;height:18px}
+.kpi strong{display:block;font-family:var(--f-num);font-size:clamp(30px,4vw,42px);line-height:1.1;margin-top:12px;font-weight:700;letter-spacing:-.02em}
+.kpi strong small{font-size:.45em;font-weight:500;margin-left:4px;color:var(--hero-muted)}
+.kpi p{font-size:13px;color:var(--hero-muted);margin-top:6px}
+.verdict{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:12px;border:1px solid var(--hero-line);border-radius:14px;overflow:hidden}
+.verdict div{padding:16px 20px}
+.verdict div+div{border-left:1px solid var(--hero-line)}
+.verdict b{display:block;font-size:12px;letter-spacing:.1em;color:#FF4C98;margin-bottom:4px}
+.verdict p{font-size:14px;color:var(--hero-fg)}
+@media (max-width:860px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.verdict{grid-template-columns:1fr}.verdict div+div{border-left:0;border-top:1px solid var(--hero-line)}}
+
+/* flow */
+.flow{padding-block:32px 8px}
+.flow h2{font-size:13px;letter-spacing:.12em;color:var(--muted);font-weight:700;text-transform:uppercase}
+.steps{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:14px;list-style:none;padding:0}
+.steps a{display:flex;flex-direction:column;gap:4px;height:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-decoration:none;position:relative;transition:border-color .15s,transform .15s}
+.steps a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.steps i{font-style:normal;font-family:var(--f-num);font-size:12px;color:var(--accent-fg);font-weight:700}
+.steps b{font-size:14px;line-height:1.3}
+.steps span{font-size:12px;color:var(--muted);line-height:1.4}
+@media (max-width:1000px){.steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:520px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* sections */
+section.ch{padding-block:64px 8px;scroll-margin-top:60px}
+.ch-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:16px;border-bottom:2px solid var(--fg)}
+.ch-head .tag{font-family:var(--f-num);font-size:12px;letter-spacing:.14em;color:var(--accent-fg);font-weight:700}
+.ch-head h2{font-size:clamp(24px,3.4vw,34px);font-weight:900;letter-spacing:-.02em;line-height:1.25;margin-top:4px}
+.ch-head p{color:var(--muted);font-size:14px;max-width:26em}
+.sub-h{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;margin:40px 0 14px}
+.sub-h::before{content:"";width:4px;height:18px;background:var(--accent);border-radius:2px}
+.sub-h small{font-weight:400;color:var(--muted);font-size:13px}
+.lead{font-size:18px;font-weight:500;line-height:1.6;margin-top:24px;max-width:34em}
+.lead b{color:var(--accent-fg)}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:900px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:1fr}}
+@media (max-width:640px){.g2,.g4{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;min-width:0}
+.card h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card h3 .sh{color:var(--accent);flex:none}
+.card p,.card li{color:var(--muted);font-size:14px}
+.card p{margin-top:8px}
+.card .big{font-family:var(--f-num);font-size:34px;font-weight:700;color:var(--fg);line-height:1.1;margin-top:10px;letter-spacing:-.02em}
+.note{display:flex;gap:12px;padding:14px 16px;border-radius:12px;font-size:14px;margin-top:14px;align-items:flex-start}
+.note b{white-space:nowrap}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.note.info{background:var(--pos-soft);color:var(--pos)}
+.note.key{background:var(--accent-soft);color:var(--accent-fg)}
+.note.neg{background:var(--neg-soft);color:var(--neg)}
+.note span{color:var(--fg)}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:3px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+.pill.neg{background:var(--neg-soft);color:var(--neg)}
+.pill.pos{background:var(--pos-soft);color:var(--pos)}
+.pill.hold{background:var(--line2);color:var(--muted)}
+.pill.acc{background:var(--accent-soft);color:var(--accent-fg)}
+
+/* question cards */
+.q{display:flex;flex-direction:column;gap:10px}
+.q .qn{font-family:var(--f-num);font-weight:700;color:var(--accent-fg);font-size:13px;letter-spacing:.08em}
+.q h3{font-size:16px;line-height:1.5;display:block}
+.q .goal{font-size:13px;color:var(--muted)}
+.q .ans{margin-top:auto;padding-top:12px;border-top:1px dashed var(--line);font-size:13px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.q .ans b{font-family:var(--f-num);font-size:18px}
+
+/* data */
+.src h3{font-size:15px}
+.src .k{font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:700;text-transform:uppercase}
+.src ul{margin:10px 0 0;padding-left:18px}
+.stat-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.stat-row .card{padding:16px 20px}
+.stat-row .big{margin-top:2px;font-size:30px}
+@media (max-width:640px){.stat-row{grid-template-columns:1fr}}
+
+.stack{display:flex;height:44px;border-radius:10px;overflow:hidden;margin-top:18px;font-size:13px;font-weight:700}
+.stack div{display:flex;align-items:center;padding:0 12px;white-space:nowrap;overflow:hidden}
+.stack .ok{flex:462;background:var(--pos);color:#fff}
+.stack .x1{flex:9;background:var(--neg);min-width:12px}
+.stack .x2{flex:19;background:var(--warn);min-width:12px}
+:root[data-theme="dark"] .stack .ok{color:#06201D}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .stack .ok{color:#06201D}}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:0}
+
+.pipe{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:22px;list-style:none;padding:0;counter-reset:p}
+.pipe li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;color:var(--muted);counter-increment:p;min-width:0}
+.pipe li b{display:block;color:var(--fg);font-size:13.5px;margin-bottom:4px}
+.pipe li::before{content:counter(p);font-family:var(--f-num);font-size:11px;font-weight:700;color:var(--accent-fg);display:block;margin-bottom:6px}
+@media (max-width:1000px){.pipe{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.pipe{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.eda{display:grid;grid-template-columns:260px minmax(0,1fr);gap:12px}
+@media (max-width:860px){.eda{grid-template-columns:1fr}}
+.donut{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.donut svg{width:170px;height:170px;max-width:100%}
+.donut .t{font-family:var(--f-num);font-size:30px;font-weight:700;fill:var(--fg)}
+.donut .s{font-size:11px;fill:var(--muted)}
+.donut p{margin-top:10px}
+.tbl{display:grid;min-width:0}
+.tbl .r{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.8fr) minmax(0,1.3fr);gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);font-size:14px;align-items:center}
+.tbl .r:last-child{border-bottom:0}
+.tbl .h{font-size:12px;letter-spacing:.08em;color:var(--muted);font-weight:700;padding-top:0}
+.tbl .r b{font-weight:700}
+.tbl .r .v{font-family:var(--f-num);font-weight:700;color:var(--accent-fg);font-size:15px}
+.tbl .r span{color:var(--muted)}
+@media (max-width:560px){.tbl .r{grid-template-columns:1fr auto}.tbl .r span{grid-column:1/-1}.tbl .h{display:none}}
+
+.cond{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.cond{grid-template-columns:1fr}}
+.cond .card .sh{width:26px;height:26px;color:var(--accent);margin-bottom:8px}
+.cond .card h3{display:block;font-size:15px;line-height:1.5;color:var(--fg)}
+.cond .card h3 em{font-style:normal;color:var(--accent-fg)}
+.excl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+@media (max-width:640px){.excl{grid-template-columns:1fr}}
+.excl div{border:1px dashed var(--line);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--muted)}
+.excl b{color:var(--fg)}
+
+.vs{border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden}
+.vs .r{display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--line);font-size:14px}
+.vs .r:last-child{border-bottom:0}
+.vs .r>*{padding:12px 16px;min-width:0}
+.vs .h{background:var(--line2);font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.vs .h.a{color:var(--pos)}.vs .h.b{color:var(--neg)}
+.vs .r>b{background:var(--bg)}
+.vs .r>span{color:var(--muted)}
+.vs .r>span:nth-child(2){color:var(--fg)}
+@media (max-width:640px){.vs .r{grid-template-columns:1fr}.vs .r>*{padding:8px 16px}.vs .h:not(.a):not(.b){display:none}.vs .r>b{background:var(--line2)}}
+
+/* charts */
+.chart{padding:22px}
+.chart h3{font-size:15px;display:block}
+.chart .cap{font-size:13px;color:var(--muted);margin-top:2px}
+.rows{display:grid;gap:14px;margin-top:20px}
+.rw{display:grid;grid-template-columns:120px minmax(0,1fr) 92px;gap:12px;align-items:center;font-size:13px}
+.rw>span:first-child{color:var(--muted);line-height:1.35}
+.rw .v{font-family:var(--f-num);font-weight:700;text-align:right;font-size:14px}
+.track{height:12px;background:var(--line2);border-radius:99px;position:relative}
+.track i{position:absolute;left:0;top:0;bottom:0;width:var(--v);background:var(--c,var(--accent));border-radius:99px}
+.track.thin{height:8px}
+.axis{display:grid;grid-template-columns:120px minmax(0,1fr) 92px;gap:12px;margin-top:6px;font-size:11px;color:var(--muted);font-family:var(--f-num)}
+.axis div{display:flex;justify-content:space-between}
+.pair{display:grid;gap:5px}
+.pair .rw{grid-template-columns:120px minmax(0,1fr) 70px}
+.lg{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-top:14px;flex-wrap:wrap}
+.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+@media (max-width:560px){.rw,.pair .rw,.axis{grid-template-columns:76px minmax(0,1fr) 56px;gap:8px}}
+.c-a{--c:var(--muted)}
+.c-b{--c:var(--accent)}
+.c-pos{--c:var(--pos)}
+
+.ps{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.ps span{font-size:12px;background:var(--line2);border-radius:99px;padding:2px 10px;color:var(--muted)}
+
+.method{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.method{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.method{grid-template-columns:1fr}}
+.method .card{padding:16px 18px}
+.method h3{font-size:14.5px}
+.samples{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+.samples .card{padding:14px 18px}
+.samples .big{font-size:28px;margin-top:0}
+.samples p{margin-top:2px;font-size:13px}
+@media (max-width:640px){.samples{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.mini{display:grid;grid-template-columns:minmax(0,1fr) 1fr;gap:12px;align-items:stretch}
+@media (max-width:900px){.mini{grid-template-columns:1fr}}
+.exp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:18px;background:var(--bg)}
+.exp div{padding:12px 14px;font-size:13.5px;min-width:0}
+.exp div+div{border-left:1px solid var(--line)}
+.exp b{display:block;font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:2px}
+@media (max-width:640px){.exp{grid-template-columns:1fr}.exp div+div{border-left:0;border-top:1px solid var(--line)}}
+
+.hyp{display:grid;gap:10px}
+.h-row{display:grid;grid-template-columns:64px minmax(0,1.2fr) minmax(0,1.2fr) 130px;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px}
+.h-row .id{font-family:var(--f-num);font-weight:700;font-size:20px}
+.h-row .t{font-weight:500;font-size:14.5px}
+.h-row .r{color:var(--muted);font-size:13.5px}
+.h-row.pos{border-color:var(--pos)}
+@media (max-width:760px){.h-row{grid-template-columns:auto 1fr;gap:6px 12px}.h-row .t,.h-row .r{grid-column:1/-1}.h-row .pill{justify-self:start;grid-column:2;grid-row:1}}
+
+.meme{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:14px;border-radius:14px;overflow:hidden;background:var(--hero-bg);color:var(--hero-fg)}
+.meme div{padding:20px;min-width:0}
+.meme div+div{border-left:1px solid var(--hero-line)}
+.meme small{font-size:11px;letter-spacing:.14em;color:var(--hero-muted);font-weight:700}
+.meme strong{display:block;font-family:var(--f-num);font-size:30px;margin:2px 0 4px}
+.meme .go{color:#4FD1C5}.meme .q2{color:#F2B84B}.meme .stop{color:#FF5B55}
+.meme p{font-size:13.5px;color:var(--hero-muted)}
+.meme-cap{text-align:center;font-size:13px;color:var(--muted);margin-top:8px}
+@media (max-width:640px){.meme{grid-template-columns:1fr}.meme div+div{border-left:0;border-top:1px solid var(--hero-line)}}
+
+/* strategy */
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:24px}
+@media (max-width:640px){.dd{grid-template-columns:1fr}}
+.dd div{border-radius:14px;padding:18px 20px}
+.dd b{font-size:12px;letter-spacing:.12em;display:block;margin-bottom:4px}
+.dd .no{background:var(--neg-soft);color:var(--neg)}
+.dd .yes{background:var(--pos-soft);color:var(--pos)}
+.dd p{color:var(--fg);font-size:16px;font-weight:500}
+.ind .n{font-family:var(--f-num);color:var(--accent-fg);font-weight:700;font-size:13px}
+.ind h3{display:block;margin-top:6px;font-size:16px}
+.act{display:grid;gap:10px}
+.a-row{display:grid;grid-template-columns:44px minmax(0,.9fr) minmax(0,1.6fr) minmax(0,1.2fr);gap:16px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px}
+.a-row .i{font-family:var(--f-num);font-weight:700;color:var(--accent-fg);font-size:20px;line-height:1.3}
+.a-row h3{font-size:15px;display:block}
+.a-row p{margin-top:0;font-size:14px;color:var(--muted)}
+.a-row .kpi-l{font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:700;display:block;margin-bottom:2px}
+@media (max-width:860px){.a-row{grid-template-columns:36px 1fr;gap:6px 12px}.a-row>*:nth-child(n+3){grid-column:2}}
+.team .card{padding:18px}
+.team h3{display:block;font-size:15px}
+.team p{margin-top:6px}
+
+/* wrap-up */
+.fix{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.fix{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.fix{grid-template-columns:1fr}}
+.fix .card{display:flex;flex-direction:column;gap:6px}
+.fix .n{font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--accent-fg);letter-spacing:.1em}
+.fix h3{display:block;font-size:14.5px;line-height:1.5}
+.fix .to{font-size:13.5px;color:var(--muted);margin-top:auto;padding-top:10px;border-top:1px dashed var(--line);display:flex;gap:8px}
+.fix .to::before{content:"→";color:var(--pos);font-weight:700}
+.lim{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px;align-items:start}
+@media (max-width:900px){.lim{grid-template-columns:1fr}}
+.list{display:grid}
+.list .r{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+.list .r:last-child{border-bottom:0}
+.list .r b{font-weight:700}
+.list .r span{color:var(--muted)}
+.todo{display:grid;gap:0}
+.todo div{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px;align-items:flex-start}
+.todo div:last-child{border-bottom:0}
+.todo .sh{color:var(--accent);flex:none;margin-top:4px}
+.todo b{color:var(--accent-fg)}
+
+.tl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;position:relative}
+.tl li{position:relative;padding-top:26px;min-width:0}
+.tl li::before{content:"";position:absolute;top:7px;left:0;right:-12px;height:2px;background:var(--line)}
+.tl li:last-child::before{right:0}
+.tl li::after{content:"";position:absolute;top:0;left:0;width:16px;height:16px;border-radius:50%;background:var(--accent);border:3px solid var(--bg)}
+.tl .d{font-family:var(--f-num);font-weight:700;font-size:14px}
+.tl b{display:block;font-size:14px;margin-top:2px}
+.tl p{font-size:13px;color:var(--muted);margin-top:4px}
+@media (max-width:860px){.tl{grid-template-columns:1fr;gap:0}.tl li{padding:0 0 20px 30px}.tl li::before{top:16px;bottom:0;left:7px;right:auto;width:2px;height:auto}.tl li:last-child::before{display:none}.tl li::after{top:2px}}
+
+.final{background:var(--hero-bg);color:var(--hero-fg);margin-top:72px;padding-block:56px}
+.final .eyebrow{color:#FF4C98}
+.final blockquote{margin:16px 0 0;font-size:clamp(22px,3.2vw,34px);line-height:1.5;font-weight:700;letter-spacing:-.01em;max-width:28em;text-wrap:balance}
+.final blockquote em{font-style:normal;color:#FF4C98}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:32px}
+.three div{border:1px solid var(--hero-line);border-radius:14px;padding:16px 18px;font-size:14px;color:var(--hero-muted)}
+.three b{display:block;color:var(--hero-fg);font-size:12px;letter-spacing:.12em;margin-bottom:4px}
+.three .o{color:#4FD1C5}.three .l{color:#F2B84B}.three .s{color:#FF4C98}
+@media (max-width:760px){.three{grid-template-columns:1fr}}
+.srcs{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.srcs a{border:1px solid var(--hero-line);border-radius:99px;padding:6px 14px;font-size:13px;color:var(--hero-fg);text-decoration:none}
+.srcs a:hover{border-color:#FF4C98;color:#FF8FBF}
+.foot{color:var(--hero-muted);font-size:12.5px;margin-top:24px;max-width:50em}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:99px;font-weight:700;font-size:14px;text-decoration:none;background:#FF4C98;color:#17151A;border:1px solid #FF4C98;transition:filter .15s}
+.btn.ghost{background:transparent;color:var(--hero-fg);border-color:#4A444F}
+.btn:hover{filter:brightness(1.1)}
+.metab{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:30px;border-top:1px solid var(--hero-line)}
+.metab div{padding:14px 18px 0 0;min-width:0}
+.metab b{display:block;font-size:11px;letter-spacing:.12em;color:#FF4C98;margin-bottom:2px}
+.metab span{font-size:13.5px;color:var(--hero-muted);line-height:1.5;display:block}
+@media (max-width:860px){.metab{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.final .cta{margin-top:28px}
+
+html{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+
+.chips .sep{width:1px;background:var(--line);margin:6px 6px;flex:none}
+.chips a.pg{font-weight:700}
+.phead{background:var(--hero-bg);color:var(--hero-fg);padding-block:44px 40px}
+.phead h1{font-size:clamp(28px,4.4vw,44px);line-height:1.2;font-weight:900;letter-spacing:-.02em;margin-top:14px;max-width:20em}
+.phead h1 em{font-style:normal;color:#FF4C98}
+.phead .sub{margin-top:12px;color:var(--hero-muted);max-width:42em;font-size:16px}
+.phead .crumb{font-size:13px;color:var(--hero-muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.phead .crumb a{color:var(--hero-muted);text-decoration:none}
+.phead .crumb a:hover{color:#FF8FBF}
+section.ch.tight{padding-block:12px 8px}
+.ev{display:block;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
+.ev:hover{border-color:var(--accent);transform:translateY(-2px)}
+.ev .k{font-size:12px;letter-spacing:.1em;color:var(--accent-fg);font-weight:700}
+.ev .big{font-size:30px;margin-top:6px}
+.ev .go{display:block;margin-top:10px;font-size:13px;font-weight:700;color:var(--accent-fg)}
+.links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}
+@media (max-width:860px){.links{grid-template-columns:1fr}}
+.lk{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;transition:border-color .15s,transform .15s}
+.lk:hover{border-color:var(--accent);transform:translateY(-2px)}
+.lk .k{font-family:var(--f-num);font-size:12px;letter-spacing:.12em;color:var(--accent-fg);font-weight:700}
+.lk h3{font-size:19px;font-weight:900}
+.lk p{font-size:14px;color:var(--muted)}
+.lk .go{margin-top:auto;padding-top:12px;font-weight:700;font-size:14px;color:var(--accent-fg)}
+.pager{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:56px}
+@media (max-width:640px){.pager{grid-template-columns:1fr}}
+.pager a{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;transition:border-color .15s}
+.pager a:hover{border-color:var(--accent)}
+.pager small{display:block;font-size:12px;color:var(--muted);letter-spacing:.08em;margin-bottom:2px}
+.pager b{font-size:16px}
+.pager .nx{text-align:right}
+.pfoot{padding-block:32px 40px;color:var(--muted);font-size:12.5px}
+/* report */
+.rep{display:grid;grid-template-columns:250px minmax(0,1fr);gap:40px;padding-top:40px;align-items:start}
+@media (max-width:900px){.rep{grid-template-columns:1fr;gap:20px}}
+.toc{position:sticky;top:calc(72px + env(safe-area-inset-top,0px));background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 8px 12px}
+.toc>b{display:block;font-size:12px;letter-spacing:.12em;color:var(--muted);padding:0 12px 8px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.toc a{display:flex;gap:10px;padding:7px 12px;border-radius:8px;font-size:13.5px;text-decoration:none;color:var(--muted);line-height:1.4}
+.toc a i{font-style:normal;font-family:var(--f-num);font-weight:700;font-size:12px;color:var(--accent-fg);padding-top:1px}
+.toc a:hover{color:var(--fg)}
+.toc a.on{background:var(--accent-soft);color:var(--accent-fg);font-weight:700}
+@media (max-width:900px){.toc{position:static}.toc ol{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.toc ol{grid-template-columns:1fr}}
+.doc{min-width:0}
+.rs{scroll-margin-top:72px;padding-bottom:44px}
+.rs h2{font-size:clamp(20px,2.6vw,26px);font-weight:900;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:2px solid var(--fg)}
+.rs h2 .sh{color:var(--accent);flex:none}
+.rs .sub-h{margin-top:28px}
+.bl{margin:16px 0 0;padding:0;list-style:none;display:grid;gap:6px;font-size:14.5px}
+.bl li{display:flex;gap:10px}
+.bl li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);margin-top:.7em;flex:none}
+.bl b{color:var(--accent-fg)}
+.tw{overflow-x:auto;margin-top:14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.rt{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+.rt th,.rt td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.55}
+.rt thead th{background:var(--fg);color:var(--bg);font-size:12.5px;letter-spacing:.04em;border-bottom:0;white-space:nowrap}
+.rt tr:last-child td,.rt tr:last-child th{border-bottom:0}
+.rt td:first-child{background:var(--bg)}
+.rt.kv{min-width:0}
+.rt.kv th{width:130px;background:var(--bg);font-weight:700;white-space:nowrap}
+.rt .ac{color:var(--accent-fg);font-weight:700}
+.rt td.ac{font-family:var(--f-num)}
+.rt .pos{color:var(--pos);font-weight:700}
+.flowx{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:center;margin-top:14px}
+.flowx div{border-radius:12px;padding:16px;text-align:center;background:var(--card);border:1px solid var(--line)}
+.flowx div b{display:block;font-size:26px}
+.flowx div span{font-size:12.5px;color:var(--muted)}
+.flowx .neg{background:var(--neg-soft);border-color:transparent}.flowx .neg b{color:var(--neg)}
+.flowx .pos{background:var(--pos-soft);border-color:transparent}.flowx .pos b{color:var(--pos)}
+.flowx i{font-style:normal;color:var(--accent);font-weight:700}
+@media (max-width:640px){.flowx{grid-template-columns:1fr}.flowx i{display:none}}
+.srcnote{font-size:13px;color:var(--muted);margin-top:12px}
+.rs .dd{margin-top:18px}
+.rs .cond{margin-top:14px}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="o" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.6"/></symbol>
+    <symbol id="t" viewBox="0 0 24 24"><path d="M12 3.5 22 20.5H2Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></symbol>
+    <symbol id="s" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="1.5" fill="none" stroke="currentColor" stroke-width="2.6"/></symbol>
+  </defs>
+</svg>
+<header class="nav"><div class="wrap">
+    <a class="brand" href="index.html" aria-label="Rewatch Impact Lab, Overview로 이동">
+      <span class="lg" aria-hidden="true">🎯</span>
+      <span class="bt"><b>Rewatch Impact Lab</b><small>Netflix 신규 시즌 공개에 따른 이전 시즌 재유입 분석</small></span>
+    </a>
+    <nav class="chips" aria-label="페이지"><a href="index.html#overview" data-s="overview">Overview</a><a href="index.html#eda" data-s="eda">EDA</a><a href="index.html#modeling" data-s="modeling">Modeling</a><span class="sep" aria-hidden="true"></span><a class="pg" href="insight.html">Business Insight</a><a class="pg" href="archive.html">Archive</a><a class="pg on" href="report.html" aria-current="page">Full Report</a></nav>
+  </div></header>
+<main id="top"><div class="phead"><div class="wrap">
+  <div class="crumb"><a href="index.html">Overview</a><span>/</span><span>Full Report</span></div>
+  <h1>신규 시즌 공개는 이전 시즌 <em>재활성화</em>의 기회인가?</h1><p class="sub">최종 보고서 전문입니다. 왼쪽 목차에서 원하는 장으로 바로 이동할 수 있습니다.</p>
+</div></div><div class="rep wrap">
+<aside class="toc" aria-label="목차">
+  <b>목차</b>
+  <ol>
+    <li><a href="#r1" data-s="r1"><i>01</i>문제 인식과 분석 목적</a></li>
+    <li><a href="#r2" data-s="r2"><i>02</i>데이터와 분석 범위</a></li>
+    <li><a href="#r3" data-s="r3"><i>03</i>EDA 및 전처리 과정</a></li>
+    <li><a href="#r4" data-s="r4"><i>04</i>재진입 정의 및 분석 방법</a></li>
+    <li><a href="#r5" data-s="r5"><i>05</i>상관분석 결과</a></li>
+    <li><a href="#r6" data-s="r6"><i>06</i>회귀분석 및 기준 모델 비교</a></li>
+    <li><a href="#r7" data-s="r7"><i>07</i>가설 검증 및 종합 결론</a></li>
+    <li><a href="#r8" data-s="r8"><i>08</i>인사이트와 실행 제안</a></li>
+    <li><a href="#r9" data-s="r9"><i>09</i>한계와 다음 단계</a></li>
+    <li><a href="#r10" data-s="r10"><i>10</i>분석 과정의 수정·트러블슈팅</a></li>
+    <li><a href="#r11" data-s="r11"><i>11</i>핵심 요약</a></li>
+    <li><a href="#r12" data-s="r12"><i>12</i>데이터 출처</a></li>
+  </ol>
+</aside>
+
+<div class="doc">
+  <section class="rs" id="r0">
+    <h2><svg class="sh"><use href="#o"/></svg>보고서 개요</h2>
+    <div class="note key"><b>핵심 요약</b><span><b style="color:var(--accent-fg)">무엇을</b> 신규 시즌 첫 TOP 10 주에 이전 시즌이 함께 진입·재진입하는지 분석<br><b style="color:var(--accent-fg)">어떻게</b> 공개 간격 ↔ 이전 시즌 시청 비중을 Spearman 상관·단순 선형회귀로 검토<br><b style="color:var(--accent-fg)">결과</b> 동반 진입·재진입은 <b>관찰됨</b> / 공개 간격만으로 예측은 <b>어려움</b><br><b style="color:var(--accent-fg)">제안</b> 신규 시즌 공개 시 이전 시즌을 함께 소개하고, 국가별 시청시간·TOP 10 재진입으로 효과 검증</span></div>
+    <div class="grid g4" style="margin-top:12px">
+      <div class="card"><div class="big num">462건</div><p>최종 신규 시즌 후보</p></div>
+      <div class="card"><div class="big num">80.7%</div><p>이전 시즌 동시 등장 (373 / 462건)</p></div>
+      <div class="card"><div class="big num">308건</div><p>재진입이 확인된 후보</p></div>
+      <div class="card"><div class="big num">6.7%</div><p>공개 간격의 설명력 (R²)</p></div>
+    </div>
+    <h3 class="sub-h">프로젝트 정보</h3>
+    <div class="tw"><table class="rt kv">
+      <tr><th>선택 산업</th><td>엔터테인먼트 · OTT · 글로벌 콘텐츠 마케팅</td></tr>
+      <tr><th>분석 데이터</th><td>Netflix TOP 10 주간 글로벌·국가별 데이터, TMDB 작품 정보 및 API</td></tr>
+      <tr><th>데이터 분석 범위</th><td>2021.07.04 ~ 2026.11.15</td></tr>
+      <tr><th>분석 단위</th><td>신규 시즌 후보별 첫 TOP 10 등장 주 + 이전 시즌의 주간 차트 기록</td></tr>
+      <tr><th>분석 기법</th><td>EDA · 규칙 기반 후보 추출 · Spearman 상관 · 단순 선형회귀 · 기준 모델 비교 · LOOCV</td></tr>
+      <tr><th>분석 기간 · 작성자</th><td>2026.11.10 – 2026.11.26 · 박송이</td></tr>
+      <tr><th>제출 목적</th><td>결과 해석 및 콘텐츠 운영·마케팅 의사결정용 인사이트·실행 제안 제시. 본 프로젝트는 데이터 분석 학습과 포트폴리오 제작을 목적으로 진행한 개인 프로젝트이며, Netflix와는 공식적 관련이 없습니다.</td></tr>
+    </table></div>
+  </section>
+
+  <section class="rs" id="r1">
+    <h2><svg class="sh"><use href="#o"/></svg>1. 문제 인식과 분석 목적</h2>
+    <ul class="bl"><li><b>문제</b> 신규 시즌 공개가 이전 시즌에 대한 관심을 되살릴 가능성</li><li><b>한계</b> TOP 10 동반 등장만으로 실제 재시청·인과효과는 증명 불가</li><li><b>목적</b> 차트상 재진입 현상을 정의하고, 공개 간격과 이전 시즌 시청 비중의 관계를 데이터로 확인</li></ul>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>#</th><th>핵심 질문</th><th>분석 목적</th></tr></thead>
+      <tr><td><b class="ac">Q1</b></td><td>신규 시즌 첫 TOP 10 주에 이전 시즌도 함께 등장하는가?</td><td>동반 진입 현황 파악</td></tr>
+      <tr><td><b class="ac">Q2</b></td><td>직전 주 차트에 없다가 다시 등장한 재진입은 얼마나 되는가?</td><td>재진입 현황 파악</td></tr>
+      <tr><td><b class="ac">Q3</b></td><td>공개 간격(gap_days)과 이전 시즌 시청 비중(prior_share)은 어떤 관계인가?</td><td>관계 탐색 + 기준 모델 대비 예측 성능 비교</td></tr>
+      <tr><td><b class="ac">Q4</b></td><td>결과를 이전 시즌 소개·정주행 유도 전략으로 연결할 수 있는가?</td><td>통계 결과와 한계를 구분해 실행 제안 도출</td></tr>
+    </table></div>
+  </section>
+
+  <section class="rs" id="r2">
+    <h2><svg class="sh"><use href="#t"/></svg>2. 데이터와 분석 범위</h2>
+    <ul class="bl"><li><b>주요 데이터</b> Netflix Tudum 주간 TOP 10 (글로벌·국가별)</li><li><b>보조 정보</b> TMDB API로 원작 언어, 시즌·시리즈 정보, 러닝타임 확인·보완</li></ul>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>데이터</th><th>활용 목적</th></tr></thead>
+      <tr><td><b>all-weeks-global.tsv</b></td><td>글로벌 주간 TOP 10 기록 및 시청시간 지표 분석</td></tr>
+      <tr><td><b>all-weeks-countries.tsv</b></td><td>국가별 TOP 10 기록, 국가별 동반 진입 범위 분석</td></tr>
+      <tr><td><b>TMDB TV Search / Series Details / Season Details</b></td><td>작품 매칭, 원작 언어·작품·시즌 정보 보완</td></tr>
+    </table></div>
+    <div class="note warn"><b>해석 주의</b><span>TOP 10 데이터는 차트 진입 기록입니다. TOP 10 밖의 전체 시청량과 개별 이용자의 재시청 행동은 관측할 수 없습니다.</span></div>
+    <h3 class="sub-h">분석 범위와 단위</h3>
+    <ul class="bl"><li><b>기간</b> 2021.07.04 – 2026.11.15</li><li><b>후보 기준</b> 실제 공개일이 아닌 ‘데이터에서 관찰된 첫 TOP 10 등장 주’</li><li><b>연결 단위</b> 작품·시즌·주차 → 신규/이전 시즌의 차트 동시 등장 확인</li><li><b>국가별 행</b> 같은 작품·같은 주차의 국가 기록 → 독립 사례로 해석하지 않음</li></ul>
+  </section>
+
+  <section class="rs" id="r3">
+    <h2><svg class="sh"><use href="#s"/></svg>3. EDA 및 전처리 과정</h2>
+    <h3 class="sub-h">후보 정제 흐름</h3>
+    <div class="flowx"><div><b class="num">490건</b><span>초기 신규 시즌 후보</span></div><i>→</i><div class="neg"><b class="num">−28건</b><span>초기 구간 9건 + 잘못 포함 19건 제외</span></div><i>→</i><div class="pos"><b class="num">462건</b><span>최종 분석 후보</span></div></div>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>단계</th><th>처리 내용</th></tr></thead>
+      <tr><td><b>시즌명 정리</b></td><td>Season·Part·Volume 등 표기를 검토해 후속 시즌 후보 구분</td></tr>
+      <tr><td><b>후보 추출</b></td><td>신규 시즌의 첫 TOP 10 등장 주 기준</td></tr>
+      <tr><td><b>후보 정제</b></td><td>이전 기록을 확인할 수 없는 초기 구간 9건, 잘못 포함된 19건 제외</td></tr>
+      <tr><td><b>이전 시즌 연결</b></td><td>작품·시즌·주차 기준으로 신규·이전 시즌 TOP 10 기록 연결</td></tr>
+      <tr><td><b>재진입 기준 보완</b></td><td>직전 주 기록으로 ‘연속 등장’과 ‘재진입’ 구분</td></tr>
+      <tr><td><b>공개 간격 산출</b></td><td>날짜가 불확실하거나 결측인 사례는 간격 분석에서 제외</td></tr>
+    </table></div>
+    <h3 class="sub-h">EDA 주요 현황</h3>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>지표</th><th>결과</th><th>해석</th></tr></thead>
+      <tr><td><b>최종 신규 시즌 후보</b></td><td class="ac">462건</td><td>정제 후 분석 후보</td></tr>
+      <tr><td><b>고유 작품 수</b></td><td class="ac">283개</td><td>후속 시즌 후보에 연결된 작품</td></tr>
+      <tr><td><b>같은 주 이전 시즌 동시 등장</b></td><td class="ac">373 / 462건 (약 80.7%)</td><td>후보 5건 중 약 4건에서 이전 시즌 관찰</td></tr>
+      <tr><td><b>이전 시즌 동시 등장 기록</b></td><td class="ac">687건</td><td>후보가 아닌 이전 시즌 기록 단위</td></tr>
+      <tr><td><b>이전 시즌 재진입 기록</b></td><td class="ac">596건</td><td>정의에 해당하는 이전 시즌 기록 단위</td></tr>
+      <tr><td><b>후보 단위 재진입</b></td><td class="ac">308 / 462건</td><td>이전 시즌 재진입이 1개 이상 확인된 후보</td></tr>
+    </table></div>
+    <div class="note warn"><b>단위 구분</b><span>596건 = 이전 시즌 기록 단위 재진입 수, 308건 = 신규 시즌 후보 단위(1개 이상 재진입 확인). 서로 다른 단위이므로 직접 비교하지 않습니다.</span></div>
+  </section>
+
+  <section class="rs" id="r4">
+    <h2><svg class="sh"><use href="#o"/></svg>4. 재진입 정의 및 분석 방법</h2>
+    <h3 class="sub-h">‘이전 시즌의 재진입’ 정의 <small>세 조건 모두 충족</small></h3>
+    <div class="cond">
+      <div class="card"><svg class="sh"><use href="#o"/></svg><h3>이전 시즌이 신규 시즌보다 <em>먼저</em> TOP 10에 등장한 기록이 있음</h3></div>
+      <div class="card"><svg class="sh"><use href="#t"/></svg><h3>신규 시즌 첫 등장 <em>직전 주</em>에는 해당 이전 시즌이 차트에 <em>없음</em></h3></div>
+      <div class="card"><svg class="sh"><use href="#s"/></svg><h3>신규 시즌 첫 등장 주에 해당 이전 시즌이 <em>다시 등장</em></h3></div>
+    </div>
+    <ul class="bl"><li>직전 주에도 차트에 있었다면 → <b>연속 등장</b> (재진입 아님)</li><li>이전 기록이 없다면 → <b>재진입으로 분류하지 않음</b></li></ul>
+    <h3 class="sub-h">차트 기록 vs 실제 이용자 재유입</h3>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>구분</th><th>이 보고서에서 본 것 (차트 기록)</th><th>확인하지 못한 것 (실제 이용자)</th></tr></thead>
+      <tr><td><b>동반 등장</b></td><td>신규 시즌 첫 TOP 10 주에 이전 시즌도 TOP 10에 있음 (373/462건)</td><td>그 이전 시즌을 실제로 본 이용자 수</td></tr>
+      <tr><td><b>재진입</b></td><td>직전 주에는 없다가 다시 TOP 10 진입 (308/462건 후보)</td><td>새로 돌아온 이용자인지, 기존 시청자의 재시청인지</td></tr>
+      <tr><td><b>시청 비중</b></td><td>TOP 10 시청시간 기반 지표 (prior_share)</td><td>TOP 10 밖 시청량, 개별 이용자의 시청 행동</td></tr>
+      <tr><td><b>원인</b></td><td>신규 시즌과 이전 시즌이 같은 주에 함께 관찰됨</td><td>신규 시즌 공개나 마케팅이 원인인지 (인과)</td></tr>
+    </table></div>
+    <div class="note neg"><b>구분 주의</b><span>차트 재진입 ≠ 이용자 재유입. 이용자 단위 데이터가 있어야 확인할 수 있어, 본 보고서의 결론은 ‘차트 기록’ 기준입니다.</span></div>
+    <h3 class="sub-h">분석 기법과 선택 이유</h3>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>기법</th><th>선택 이유</th></tr></thead>
+      <tr><td><b>EDA · 기술통계</b></td><td>후보 규모, 차트 동시 등장, 재진입 현황과 분포 확인</td></tr>
+      <tr><td><b>Spearman 상관분석</b></td><td>표본이 작고 정규분포·선형 관계를 가정하기 어려워 순위 기반 관계 탐색</td></tr>
+      <tr><td><b>단순 선형회귀</b></td><td>공개 간격 하나가 이전 시즌 시청 비중을 얼마나 설명하는지 확인</td></tr>
+      <tr><td><b>Baseline 비교</b></td><td>단순 평균 예측보다 실제로 나은지 판단</td></tr>
+      <tr><td><b>LOOCV</b></td><td>유효 표본이 14개로 적어 각 사례를 한 번씩 검증에 사용</td></tr>
+      <tr><td><b>Mann–Whitney U 검정</b></td><td>영어·비영어 히트 사례의 지표 분포를 탐색적으로 비교</td></tr>
+    </table></div>
+    <h3 class="sub-h">분석 표본</h3>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>분석</th><th>표본</th></tr></thead>
+      <tr><td><b>히트/비히트 및 언어권 탐색 비교</b></td><td>21건 (히트 10 · 비히트 11)</td></tr>
+      <tr><td><b>영어 히트 / 비영어 히트</b></td><td>8건 / 2건</td></tr>
+      <tr><td><b>공개 간격 ↔ prior_share 상관·회귀</b></td><td>유효 공개 간격 14건</td></tr>
+      <tr><td><b>재진입 사례만의 공개 간격 상관</b></td><td>12건</td></tr>
+    </table></div>
+  </section>
+
+  <section class="rs" id="r5">
+    <h2><svg class="sh"><use href="#t"/></svg>5. 상관분석 결과</h2>
+    <h3 class="sub-h">공개 간격 ↔ 이전 시즌 시청 비중</h3>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>분석 범위</th><th>n</th><th>Spearman ρ</th><th>p-value</th><th>해석</th></tr></thead>
+      <tr><td><b>전체 유효 간격 사례</b></td><td>14</td><td class="ac">0.3828</td><td>0.1767</td><td>양의 방향, 유의하지 않음</td></tr>
+      <tr><td><b>재진입 사례만</b></td><td>12</td><td class="ac">0.5105</td><td>0.0899</td><td>양의 방향 더 큼, 유의하지 않음</td></tr>
+      <tr><td><b>Money Heist 재진입 사례 제외</b></td><td>11</td><td class="ac">0.5545</td><td>0.0767</td><td>방향 유지, 표본 더 작고 유의하지 않음</td></tr>
+    </table></div>
+    <div class="tw"><table class="rt kv">
+      <tr><th>예상</th><td>공개 간격이 <b>짧을수록</b> 이전 시즌 동반 유입이 클 것</td></tr>
+      <tr><th>관찰</th><td>오히려 공개 간격이 <b>길수록</b> prior_share가 높아지는 양의 방향</td></tr>
+      <tr><th>판단</th><td>p &gt; 0.05, 표본이 작아 <b>통계적 확정·일반화 불가</b></td></tr>
+    </table></div>
+    <h3 class="sub-h">언어권별 히트 사례 비교</h3>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>지표</th><th>영어 히트 중앙값 (n=8)</th><th>비영어 히트 중앙값 (n=2)</th><th>p-value</th></tr></thead>
+      <tr><td><b>inflow_ratio</b></td><td>17.04%</td><td class="ac">22.46%</td><td>0.4000</td></tr>
+      <tr><td><b>prior_share</b></td><td>14.56%</td><td class="ac">18.34%</td><td>0.4000</td></tr>
+      <tr><td><b>country_ratio</b></td><td>22.39%</td><td class="ac">69.32%</td><td>0.2667</td></tr>
+    </table></div>
+    <ul class="bl"><li>비영어 히트의 <b>세 지표 중앙값이 모두 더 높음</b> (국가 재진입 비율 46.93%p 차이)</li><li>그러나 모든 p-value &gt; 0.05, 비영어 표본 2건뿐 → <b>언어권 차이의 통계적 근거 없음</b></li></ul>
+    <div class="note info"><b>인사이트 해석</b><span>관찰된 중앙값 차이는 ‘추가로 확인해 볼 신호’입니다. 유의한 집단 차이나 글로벌 콘텐츠 전체의 특성으로 단정할 수 없습니다.</span></div>
+  </section>
+
+  <section class="rs" id="r6">
+    <h2><svg class="sh"><use href="#s"/></svg>6. 회귀분석 및 기준 모델 비교</h2>
+    <ul class="bl"><li><b>목적</b> 공개 간격(gap_days)이 이전 시즌 시청 비중(prior_share) 예측에 도움이 되는지 확인</li><li><b>방법</b> 단순 선형회귀 + LOOCV(표본 14개) → 단순 평균 기준 모델과 비교</li></ul>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>오차 지표 (낮을수록 좋음)</th><th>Baseline (평균 예측)</th><th>단순 선형회귀</th></tr></thead>
+      <tr><td><b>MAE</b></td><td class="pos">0.0809 ✓ 더 좋음</td><td>0.0850</td></tr>
+      <tr><td><b>RMSE</b></td><td class="pos">0.1004 ✓ 더 좋음</td><td>0.1026</td></tr>
+    </table></div>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>회귀 결과</th><th>값</th></tr></thead>
+      <tr><td><b>회귀계수</b></td><td>0.000154</td></tr>
+      <tr><td><b>절편</b></td><td>0.08325</td></tr>
+      <tr><td><b>전체 데이터 기준 R²</b></td><td>0.0667 (약 6.7%)</td></tr>
+    </table></div>
+    <div class="note key"><b>모델링 결론</b><span>공개 간격 단일 변수로 이전 시즌 시청 비중을 설명·예측하기 어렵습니다. 회귀계수가 양수라는 이유만으로 ‘간격이 길수록 효과가 크다’고 결론 내릴 수 없습니다.</span></div>
+  </section>
+
+  <section class="rs" id="r7">
+    <h2><svg class="sh"><use href="#o"/></svg>7. 가설 검증 및 종합 결론</h2>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>가설</th><th>결과 요약</th><th>판정</th></tr></thead>
+      <tr><td><b class="ac">H1</b> 공개 간격이 짧을수록 이전 시즌 동반 유입이 클 것</td><td>재진입 12건: ρ=0.5105, p=0.0899. 방향이 예상과 반대, 유의하지 않음</td><td><span class="pill neg">지지되지 않음</span></td></tr>
+      <tr><td><b class="ac">H1-1</b> 공개 간격이 이전 시즌 시청 비중 설명에 도움이 될 것</td><td>회귀 MAE·RMSE가 기준 모델보다 높음, R²=0.0667</td><td><span class="pill neg">지지되지 않음</span></td></tr>
+      <tr><td><b class="ac">H2</b> 히트 시즌이 비히트보다 이전 시즌 동반 진입이 많을 것</td><td>동반 등장: 히트 10/10 (100%), 비히트 7/11 (63.6%)</td><td><span class="pill hold">판단 보류</span></td></tr>
+      <tr><td><b class="ac">H3</b> 비영어 히트가 영어 히트보다 국가별 동반 진입 범위가 넓을 것</td><td>중앙값 차이는 관찰, p=0.2667, 비영어 n=2</td><td><span class="pill hold">판단 보류</span></td></tr>
+      <tr><td><b class="ac">H4</b> 신규 시즌 첫 TOP 10 주에 이전 시즌 동시 등장·재진입이 관찰될 것</td><td>462건 중 373건 동시 등장, 후보 단위 재진입 308건</td><td><span class="pill pos">관찰됨</span></td></tr>
+    </table></div>
+    <h3 class="sub-h">최종 결론</h3>
+    <ul class="bl"><li>신규 시즌 첫 TOP 10 주에 이전 시즌의 <b>동반 등장·재진입 관찰</b> → 기존 시즌을 함께 소개할 기회가 있을 수 있음</li><li>공개 간격 ↔ 이전 시즌 시청 비중은 <b>예상과 다른 방향</b>, 상관·회귀 모두 예측력 확정 불가</li></ul>
+    <div class="dd"><div class="no"><b>하지 않을 것</b><p>‘공개 간격으로 이전 시즌의 유입 규모를 예측하자’</p></div><div class="yes"><b>할 것</b><p>‘이전 시즌을 함께 노출하고, 국가별 실제 시청 결과로 효과를 측정하자’</p></div></div>
+  </section>
+
+  <section class="rs" id="r8">
+    <h2><svg class="sh"><use href="#t"/></svg>8. 인사이트와 실행 제안</h2>
+    <h3 class="sub-h">무엇이 영향을 줬나?</h3>
+    <ul class="bl"><li>공개 간격은 prior_share와 <b>양의 방향 경향</b>이나, 비유의·예측력도 기준 모델보다 낮음</li><li>→ 공개 간격을 <b>주요 결정 변수로 삼지 않음</b></li><li>→ 대신 <b>운영 관찰 지표</b>로 활용: 신규 시즌의 TOP 10 진입 여부 · 이전 시즌의 실제 차트 상태 · 국가별 동반 등장 여부</li></ul>
+    <h3 class="sub-h">그래서 무엇을 할까?</h3>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>전략</th><th>실행 내용</th><th>측정 지표</th></tr></thead>
+      <tr><td><b>이전 시즌 동시 소개</b></td><td>신규 시즌 페이지·캠페인에 이전 시즌 요약, 주요 인물, 핵심 사건 함께 소개</td><td>이전 시즌 주간 시청시간, TOP 10 재진입 여부</td></tr>
+      <tr><td><b>국가별 노출 검토</b></td><td>이전 시즌이 실제 동반 진입한 국가를 참고해 현지화된 요약·추천 검토</td><td>동반 진입 국가 수, 국가별 TOP 10 진입률</td></tr>
+      <tr><td><b>정주행 장벽 낮추기</b></td><td>시즌별 recap, 캐릭터 관계도, ‘처음부터 다시 보기’ 콘텐츠 제공</td><td>이전 시즌 시청시간 변화, 시즌 간 이어보기 지표(가능 시)</td></tr>
+      <tr><td><b>실험 후 효과 검증</b></td><td>일부 국가·타이틀에서 노출 방식·시점을 비교하고 결과 기록</td><td>노출 전후 시청시간, 재진입 국가 수, 캠페인별 성과</td></tr>
+    </table></div>
+    <h3 class="sub-h">누가 무엇을 다르게 할까?</h3>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>담당</th><th>해야 할 일</th></tr></thead>
+      <tr><td><b>콘텐츠 마케팅</b></td><td>신규 시즌 일정만 홍보 ✕ → 이전 시즌을 이해할 수 있는 요약 콘텐츠 함께 준비</td></tr>
+      <tr><td><b>글로벌·지역</b></td><td>국가별 동반 진입 현황 참고 / 표본 적은 언어권 결과를 고정 전략으로 일반화 금지</td></tr>
+      <tr><td><b>콘텐츠 운영·분석</b></td><td>공개 간격만으로 프로모션 규모 결정 ✕ → 주간 시청시간·국가별 차트 기록 병행 확인</td></tr>
+      <tr><td><b>성과 분석</b></td><td>캠페인 후 지표 비교, 미노출 시와의 차이를 가능한 범위에서 검증</td></tr>
+    </table></div>
+    <div class="note warn"><b>제안의 성격</b><span>본 분석은 동반 진입 현상을 관찰한 ‘탐색적 분석’입니다. 이전 시즌 노출 → 시청시간 증가의 인과효과는 미증명이므로, 실행 후 측정·검증하는 전략으로 제시합니다.</span></div>
+  </section>
+
+  <section class="rs" id="r9">
+    <h2><svg class="sh"><use href="#s"/></svg>9. 한계와 다음 단계</h2>
+    <h3 class="sub-h">분석 한계</h3>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>구분</th><th>내용</th></tr></thead>
+      <tr><td><b>관측 범위</b></td><td>TOP 10 밖 전체 시청량·실제 재시청 이용자 확인 불가</td></tr>
+      <tr><td><b>시점 기준</b></td><td>첫 TOP 10 등장 주 ≠ 실제 공개일 (차트 등장 시점 기준 분석)</td></tr>
+      <tr><td><b>표본 크기</b></td><td>공개 간격 회귀·상관 n=14, 재진입 사례 상관 n=12, 비영어 히트 n=2</td></tr>
+      <tr><td><b>공개일 불일치</b></td><td>Netflix와 TMDB 공개일이 다른 작품 → 간격 산출 제외 또는 불확실성 잔존</td></tr>
+      <tr><td><b>중복 구조</b></td><td>국가별 기록은 같은 작품의 관측 → 독립 표본으로 합산 시 중복·의존성 발생</td></tr>
+      <tr><td><b>인과 해석</b></td><td>상관 ≠ 인과. 신규 시즌 공개·마케팅 노출이 재진입을 일으켰다고 입증 불가</td></tr>
+      <tr><td><b>지표 중복</b></td><td>inflow_ratio와 prior_share는 같은 시청시간 정보의 변환 → 독립 증거 2개로 해석 금지</td></tr>
+    </table></div>
+    <h3 class="sub-h">다음에 해 볼 것</h3>
+    <ul class="bl"><li>더 많은 시즌·작품 사례를 확보해 공개 간격 분석의 <b>표본 확대</b></li><li><b>공식 공개일</b>을 정확히 확인하고, 첫 TOP 10 주와 구분해 분석</li><li>국가·작품·주차의 중복 구조를 고려해 <b>집계 단위 명확화</b></li><li>캠페인 전후 <b>시청시간·국가별 재진입 추적</b>, 가능하면 비교군으로 효과 검증</li></ul>
+  </section>
+
+  <section class="rs" id="r10">
+    <h2><svg class="sh"><use href="#o"/></svg>10. 분석 과정의 수정 · 트러블슈팅</h2>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>문제·발견</th><th>수정·대응</th><th>의미</th></tr></thead>
+      <tr><td><b>시즌명 표기가 다양함</b></td><td>Season·Part·Volume 등 표기 규칙을 검토해 후보 정리</td><td>후속 시즌을 일관되게 식별</td></tr>
+      <tr><td><b>초기 구간은 이전 시즌 이력 확인 불가</b></td><td>데이터 시작 시점 후보 9건 제외</td><td>재진입 여부를 판단할 수 없는 사례 제거</td></tr>
+      <tr><td><b>후보 추출에 잘못 포함된 사례</b></td><td>19건 제외 (490건 → 462건)</td><td>후보 조건 명확화</td></tr>
+      <tr><td><b>같은 주 등장만으로 재진입·연속 등장 구분 어려움</b></td><td>직전 주 TOP 10 기록 추가 확인</td><td>재진입 정의 세분화</td></tr>
+      <tr><td><b>공개일이 불확실하거나 결측</b></td><td>유효 gap_days 14건만 간격 분석에 사용</td><td>불확실한 날짜가 회귀 결과에 섞이지 않게 함</td></tr>
+      <tr><td><b>회귀 성능이 기준 모델보다 낮음</b></td><td>모델을 무리하게 늘리지 않고 단일 변수의 한계로 보고</td><td>결과에 맞춰 결론·제안 조정</td></tr>
+    </table></div>
+    <div class="note info"><b>분석 태도</b><span>결과를 좋게 보이려 모델을 추가하지 않고, 표본 규모와 성능을 확인한 뒤 범위와 결론을 조정했습니다. 한계를 숨기지 않고 실제 의사결정에 쓸 수 있는 수준으로 해석했습니다.</span></div>
+  </section>
+
+  <section class="rs" id="r11">
+    <h2><svg class="sh"><use href="#t"/></svg>11. 핵심 요약</h2>
+    <div class="note key"><b>핵심 한 문장</b><span>신규 시즌 공개 시 이전 시즌의 TOP 10 재진입이 관찰되지만 공개 간격만으로 규모를 예측하기는 어려우므로, 신규·이전 시즌을 함께 소개하고 국가별 실제 시청 결과로 효과를 검증해야 한다.</span></div>
+  </section>
+
+  <section class="rs" id="r12">
+    <h2><svg class="sh"><use href="#s"/></svg>12. 데이터 출처</h2>
+    <div class="tw"><table class="rt">
+      <thead><tr><th>출처</th><th>URL</th></tr></thead>
+      <tr><td><b>Netflix Tudum – TOP 10 Weekly Data</b></td><td><a href="https://www.netflix.com/tudum/top10" target="_blank" rel="noopener">https://www.netflix.com/tudum/top10</a></td></tr>
+      <tr><td><b>Global Weekly TOP 10 Dataset</b></td><td><a href="https://www.netflix.com/tudum/top10/data/all-weeks-global.tsv" target="_blank" rel="noopener">https://www.netflix.com/tudum/top10/data/all-weeks-global.tsv</a></td></tr>
+      <tr><td><b>Country Weekly TOP 10 Dataset</b></td><td><a href="https://www.netflix.com/tudum/top10/data/all-weeks-countries.tsv" target="_blank" rel="noopener">https://www.netflix.com/tudum/top10/data/all-weeks-countries.tsv</a></td></tr>
+      <tr><td><b>TMDB – API Documentation</b></td><td><a href="https://developer.themoviedb.org/docs/getting-started" target="_blank" rel="noopener">https://developer.themoviedb.org/docs/getting-started</a></td></tr>
+      <tr><td><b>TMDB – TV Search API</b></td><td><a href="https://developer.themoviedb.org/reference/search-tv" target="_blank" rel="noopener">https://developer.themoviedb.org/reference/search-tv</a></td></tr>
+      <tr><td><b>TMDB – TV Series Details API</b></td><td><a href="https://developer.themoviedb.org/reference/tv-series-details" target="_blank" rel="noopener">https://developer.themoviedb.org/reference/tv-series-details</a></td></tr>
+      <tr><td><b>TMDB – TV Season Details API</b></td><td><a href="https://developer.themoviedb.org/reference/tv-season-details" target="_blank" rel="noopener">https://developer.themoviedb.org/reference/tv-season-details</a></td></tr>
+    </table></div>
+    <p class="srcnote">Netflix TOP 10 데이터를 분석하고, TMDB API로 작품의 원작 언어·러닝타임 등 필요한 정보를 보완했습니다.</p>
+  </section>
+</div>
+</div>
+<div class="wrap"><div class="pager"><a href="archive.html"><small>← 이전</small><b>Archive · 분석 과정 기록</b></a><a class="nx" href="index.html"><small>다음 →</small><b>Overview · 처음으로</b></a></div></div></main>
+<div class="wrap pfoot">본 프로젝트는 데이터 분석 학습과 포트폴리오 제작을 목적으로 진행한 개인 프로젝트이며, Netflix와는 공식적 관련이 없습니다. 작성 박송이 · 2026.11</div>
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.toc a'));
+  var secs=links.map(function(a){return document.getElementById(a.dataset.s)});
+  function spy(){var y=window.scrollY+110,cur=null;secs.forEach(function(s){if(s&&s.offsetTop<=y)cur=s.id});
+    links.forEach(function(a){a.classList.toggle('on',a.dataset.s===cur)})}
+  window.addEventListener('scroll',spy,{passive:true});spy();
+})();
+</script>
+</body></html>

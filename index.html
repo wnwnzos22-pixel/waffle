@@ -1,279 +1,728 @@
-<!DOCTYPE html>
-<!-- saved from url=(0146)https://rhncejnherrxkcrr.tunnel.elice.io/files/home/elicer/Practice/%EC%83%81%EA%B0%80%EC%A0%95%EB%B3%B4_%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C.html -->
-<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>상가(상권)정보 요약 대시보드</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Rewatch Impact Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@500;700&display=swap">
 <style>
-  :root { --blue:#4C72B0; --orange:#dd8452; --ink:#22272e; --sub:#57606a; --line:#d8dee4; }
-  * { box-sizing:border-box; }
-  body { margin:0; background:#f5f6f8; color:var(--ink);
-         font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif; }
-  header { background:#fff; border-bottom:1px solid var(--line); padding:18px 28px;
-           display:flex; align-items:center; gap:16px; position:sticky; top:0; z-index:5; }
-  header h1 { font-size:20px; margin:0; }
-  header .meta { font-size:12.5px; color:var(--sub); margin-top:3px; }
-  header .spacer { flex:1; }
-  #reportBtn { background:#1f6feb; color:#fff; border:0; border-radius:8px; padding:10px 16px;
-               font-size:14px; cursor:pointer; font-family:inherit; }
-  #reportBtn:hover { background:#175bc4; }
-  main { max-width:1080px; margin:0 auto; padding:20px 28px 40px; }
-  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:18px 0 26px; }
-  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 20px; }
-  .stat .num { font-size:38px; font-weight:800; letter-spacing:-1px; }
-  .stat .lab { font-size:14px; color:var(--sub); margin-top:2px; }
-  .stat .sub { font-size:12px; color:#8b949e; margin-top:4px; }
-  h2 { font-size:16px; margin:30px 0 10px; }
-  table { width:100%; border-collapse:collapse; background:#fff; font-size:13.5px; }
-  th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
-  th { background:#eef1f4; }
-  td.n { text-align:right; white-space:nowrap; }
-  .controls { display:flex; align-items:center; gap:10px; margin:26px 0 14px; }
-  .controls label { font-size:14px; font-weight:700; }
-  select { font-family:inherit; font-size:14px; padding:8px 12px; border:1px solid var(--line);
-           border-radius:8px; background:#fff; min-width:230px; }
-  .charts { display:grid; grid-template-columns:1fr; gap:16px; }
-  .chart-card h3 { font-size:15px; margin:0 0 2px; }
-  .chart-card .note { font-size:12.5px; color:var(--sub); margin:6px 0 0; }
-  .legend { font-size:12.5px; color:var(--sub); margin-top:4px; display:flex; gap:14px; }
-  .legend i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:4px; }
-  footer { font-size:12px; color:#8b949e; margin-top:26px; line-height:1.6; }
-  @media (max-width:720px){ .stats{grid-template-columns:1fr;} main{padding:16px;} }
+/* Layout: sticky chapter nav, dark hero with the four headline numbers, then one chapter per stage of the analysis, in the order the work was done. */
+:root{
+  --bg:#F6F4F5; --card:#FFFFFF; --fg:#17151A; --muted:#6B6571; --line:#E4E0E3; --line2:#EDEAEC;
+  --accent:#E3176E; --accent-soft:#FCE6F0; --accent-fg:#B30F55;
+  --neg:#D3302B; --neg-soft:#FCEAE9;
+  --pos:#0C8A80; --pos-soft:#DFF3F1;
+  --warn:#9A6200; --warn-soft:#FFF1D6;
+  --hero-bg:#121013; --hero-fg:#F7F4F6; --hero-muted:#B3ACB5; --hero-line:#2E2A32;
+  --nav-bg:rgba(246,244,245,.88);
+  --f-body:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  --f-num:'Space Grotesk','Noto Sans KR',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E0D10; --card:#18161B; --fg:#F2EFF3; --muted:#A39CA8; --line:#2C2931; --line2:#242128;
+  --accent:#FF4C98; --accent-soft:#3A1527; --accent-fg:#FF8FBF;
+  --neg:#FF7A73; --neg-soft:#35191A;
+  --pos:#4FD1C5; --pos-soft:#11302D;
+  --warn:#F2B84B; --warn-soft:#33270E;
+  --nav-bg:rgba(14,13,16,.88); color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0E0D10; --card:#18161B; --fg:#F2EFF3; --muted:#A39CA8; --line:#2C2931; --line2:#242128;
+  --accent:#FF4C98; --accent-soft:#3A1527; --accent-fg:#FF8FBF;
+  --neg:#FF7A73; --neg-soft:#35191A;
+  --pos:#4FD1C5; --pos-soft:#11302D;
+  --warn:#F2B84B; --warn-soft:#33270E;
+  --nav-bg:rgba(14,13,16,.88); color-scheme:dark;}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.65;word-break:keep-all;overflow-wrap:break-word}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--nav-bg);backdrop-filter:blur(10px)}
+h1,h2,h3,h4,p{margin:0}
+h1,h2,h3{text-wrap:balance}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.sh{display:inline-block;width:1em;height:1em;vertical-align:-.14em}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--nav-bg);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:20px;height:56px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;white-space:nowrap;text-decoration:none;letter-spacing:.02em}
+.brand svg{width:44px;height:16px;flex:none}
+.brand span{color:var(--muted);font-weight:500}
+.chips{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none;min-width:0}
+.chips::-webkit-scrollbar{display:none}
+.chips a{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap}
+.chips a:hover{color:var(--fg)}
+.chips a.on{background:var(--fg);color:var(--bg)}
+@media (max-width:760px){.nav .wrap{gap:10px}}
+
+/* brand lockup */
+.nav .wrap{height:62px}
+.brand{flex:none}
+.brand .lg{font-size:28px;line-height:1;display:block;position:relative;top:-9px}
+.brand .bt{display:flex;flex-direction:column;line-height:1.25;color:var(--fg);font-weight:700}
+.brand .bt b{font-size:17px;font-weight:900;letter-spacing:-.01em}
+.brand .bt small{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:0}
+@media (max-width:1040px){
+.nav .wrap{flex-wrap:wrap;height:auto;gap:2px;padding-block:8px 6px}
+.brand{flex:1 1 100%;min-width:0;white-space:normal}
+.brand .bt{min-width:0}
+.chips{flex:1 1 100%;margin-left:0}
+.chips a{padding:5px 11px}
+section.ch,.rs{scroll-margin-top:112px}
+.toc{top:calc(104px + env(safe-area-inset-top,0px))}
+}
+@media (max-width:480px){.brand .bt small{font-size:11px;line-height:1.35}}
+/* hero */
+.hero{background:var(--hero-bg);color:var(--hero-fg);padding-block:56px 48px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--hero-muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.eyebrow b{color:#FF4C98}
+.hero h1{font-size:clamp(30px,5.2vw,52px);line-height:1.2;font-weight:900;margin-top:18px;letter-spacing:-.02em;max-width:18em}
+.hero h1 em{font-style:normal;color:#FF4C98}
+.hero .sub{margin-top:16px;color:var(--hero-muted);max-width:40em;font-size:16px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.meta span{border:1px solid var(--hero-line);border-radius:99px;padding:4px 12px;font-size:13px;color:var(--hero-muted)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:40px}
+.kpi{border:1px solid var(--hero-line);border-radius:14px;padding:18px 18px 16px;background:#1A171C}
+.kpi .sh{color:#FF4C98;width:18px;height:18px}
+.kpi strong{display:block;font-family:var(--f-num);font-size:clamp(30px,4vw,42px);line-height:1.1;margin-top:12px;font-weight:700;letter-spacing:-.02em}
+.kpi strong small{font-size:.45em;font-weight:500;margin-left:4px;color:var(--hero-muted)}
+.kpi p{font-size:13px;color:var(--hero-muted);margin-top:6px}
+.verdict{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:12px;border:1px solid var(--hero-line);border-radius:14px;overflow:hidden}
+.verdict div{padding:16px 20px}
+.verdict div+div{border-left:1px solid var(--hero-line)}
+.verdict b{display:block;font-size:12px;letter-spacing:.1em;color:#FF4C98;margin-bottom:4px}
+.verdict p{font-size:14px;color:var(--hero-fg)}
+@media (max-width:860px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.verdict{grid-template-columns:1fr}.verdict div+div{border-left:0;border-top:1px solid var(--hero-line)}}
+
+/* flow */
+.flow{padding-block:32px 8px}
+.flow h2{font-size:13px;letter-spacing:.12em;color:var(--muted);font-weight:700;text-transform:uppercase}
+.steps{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:14px;list-style:none;padding:0}
+.steps a{display:flex;flex-direction:column;gap:4px;height:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-decoration:none;position:relative;transition:border-color .15s,transform .15s}
+.steps a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.steps i{font-style:normal;font-family:var(--f-num);font-size:12px;color:var(--accent-fg);font-weight:700}
+.steps b{font-size:14px;line-height:1.3}
+.steps span{font-size:12px;color:var(--muted);line-height:1.4}
+@media (max-width:1000px){.steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:520px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* sections */
+section.ch{padding-block:64px 8px;scroll-margin-top:60px}
+.ch-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:16px;border-bottom:2px solid var(--fg)}
+.ch-head .tag{font-family:var(--f-num);font-size:12px;letter-spacing:.14em;color:var(--accent-fg);font-weight:700}
+.ch-head h2{font-size:clamp(24px,3.4vw,34px);font-weight:900;letter-spacing:-.02em;line-height:1.25;margin-top:4px}
+.ch-head p{color:var(--muted);font-size:14px;max-width:26em}
+.sub-h{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;margin:40px 0 14px}
+.sub-h::before{content:"";width:4px;height:18px;background:var(--accent);border-radius:2px}
+.sub-h small{font-weight:400;color:var(--muted);font-size:13px}
+.lead{font-size:18px;font-weight:500;line-height:1.6;margin-top:24px;max-width:34em}
+.lead b{color:var(--accent-fg)}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:900px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:1fr}}
+@media (max-width:640px){.g2,.g4{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;min-width:0}
+.card h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card h3 .sh{color:var(--accent);flex:none}
+.card p,.card li{color:var(--muted);font-size:14px}
+.card p{margin-top:8px}
+.card .big{font-family:var(--f-num);font-size:34px;font-weight:700;color:var(--fg);line-height:1.1;margin-top:10px;letter-spacing:-.02em}
+.note{display:flex;gap:12px;padding:14px 16px;border-radius:12px;font-size:14px;margin-top:14px;align-items:flex-start}
+.note b{white-space:nowrap}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.note.info{background:var(--pos-soft);color:var(--pos)}
+.note.key{background:var(--accent-soft);color:var(--accent-fg)}
+.note.neg{background:var(--neg-soft);color:var(--neg)}
+.note span{color:var(--fg)}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:3px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+.pill.neg{background:var(--neg-soft);color:var(--neg)}
+.pill.pos{background:var(--pos-soft);color:var(--pos)}
+.pill.hold{background:var(--line2);color:var(--muted)}
+.pill.acc{background:var(--accent-soft);color:var(--accent-fg)}
+
+/* question cards */
+.q{display:flex;flex-direction:column;gap:10px}
+.q .qn{font-family:var(--f-num);font-weight:700;color:var(--accent-fg);font-size:13px;letter-spacing:.08em}
+.q h3{font-size:16px;line-height:1.5;display:block}
+.q .goal{font-size:13px;color:var(--muted)}
+.q .ans{margin-top:auto;padding-top:12px;border-top:1px dashed var(--line);font-size:13px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.q .ans b{font-family:var(--f-num);font-size:18px}
+
+/* data */
+.src h3{font-size:15px}
+.src .k{font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:700;text-transform:uppercase}
+.src ul{margin:10px 0 0;padding-left:18px}
+.stat-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.stat-row .card{padding:16px 20px}
+.stat-row .big{margin-top:2px;font-size:30px}
+@media (max-width:640px){.stat-row{grid-template-columns:1fr}}
+
+.stack{display:flex;height:44px;border-radius:10px;overflow:hidden;margin-top:18px;font-size:13px;font-weight:700}
+.stack div{display:flex;align-items:center;padding:0 12px;white-space:nowrap;overflow:hidden}
+.stack .ok{flex:462;background:var(--pos);color:#fff}
+.stack .x1{flex:9;background:var(--neg);min-width:12px}
+.stack .x2{flex:19;background:var(--warn);min-width:12px}
+:root[data-theme="dark"] .stack .ok{color:#06201D}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .stack .ok{color:#06201D}}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:0}
+
+.pipe{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:22px;list-style:none;padding:0;counter-reset:p}
+.pipe li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;color:var(--muted);counter-increment:p;min-width:0}
+.pipe li b{display:block;color:var(--fg);font-size:13.5px;margin-bottom:4px}
+.pipe li::before{content:counter(p);font-family:var(--f-num);font-size:11px;font-weight:700;color:var(--accent-fg);display:block;margin-bottom:6px}
+@media (max-width:1000px){.pipe{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.pipe{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.eda{display:grid;grid-template-columns:260px minmax(0,1fr);gap:12px}
+@media (max-width:860px){.eda{grid-template-columns:1fr}}
+.donut{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.donut svg{width:170px;height:170px;max-width:100%}
+.donut .t{font-family:var(--f-num);font-size:30px;font-weight:700;fill:var(--fg)}
+.donut .s{font-size:11px;fill:var(--muted)}
+.donut p{margin-top:10px}
+.tbl{display:grid;min-width:0}
+.tbl .r{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.8fr) minmax(0,1.3fr);gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);font-size:14px;align-items:center}
+.tbl .r:last-child{border-bottom:0}
+.tbl .h{font-size:12px;letter-spacing:.08em;color:var(--muted);font-weight:700;padding-top:0}
+.tbl .r b{font-weight:700}
+.tbl .r .v{font-family:var(--f-num);font-weight:700;color:var(--accent-fg);font-size:15px}
+.tbl .r span{color:var(--muted)}
+@media (max-width:560px){.tbl .r{grid-template-columns:1fr auto}.tbl .r span{grid-column:1/-1}.tbl .h{display:none}}
+
+.cond{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.cond{grid-template-columns:1fr}}
+.cond .card .sh{width:26px;height:26px;color:var(--accent);margin-bottom:8px}
+.cond .card h3{display:block;font-size:15px;line-height:1.5;color:var(--fg)}
+.cond .card h3 em{font-style:normal;color:var(--accent-fg)}
+.excl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+@media (max-width:640px){.excl{grid-template-columns:1fr}}
+.excl div{border:1px dashed var(--line);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--muted)}
+.excl b{color:var(--fg)}
+
+.vs{border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden}
+.vs .r{display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--line);font-size:14px}
+.vs .r:last-child{border-bottom:0}
+.vs .r>*{padding:12px 16px;min-width:0}
+.vs .h{background:var(--line2);font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.vs .h.a{color:var(--pos)}.vs .h.b{color:var(--neg)}
+.vs .r>b{background:var(--bg)}
+.vs .r>span{color:var(--muted)}
+.vs .r>span:nth-child(2){color:var(--fg)}
+@media (max-width:640px){.vs .r{grid-template-columns:1fr}.vs .r>*{padding:8px 16px}.vs .h:not(.a):not(.b){display:none}.vs .r>b{background:var(--line2)}}
+
+/* charts */
+.chart{padding:22px}
+.chart h3{font-size:15px;display:block}
+.chart .cap{font-size:13px;color:var(--muted);margin-top:2px}
+.rows{display:grid;gap:14px;margin-top:20px}
+.rw{display:grid;grid-template-columns:120px minmax(0,1fr) 92px;gap:12px;align-items:center;font-size:13px}
+.rw>span:first-child{color:var(--muted);line-height:1.35}
+.rw .v{font-family:var(--f-num);font-weight:700;text-align:right;font-size:14px}
+.track{height:12px;background:var(--line2);border-radius:99px;position:relative}
+.track i{position:absolute;left:0;top:0;bottom:0;width:var(--v);background:var(--c,var(--accent));border-radius:99px}
+.track.thin{height:8px}
+.axis{display:grid;grid-template-columns:120px minmax(0,1fr) 92px;gap:12px;margin-top:6px;font-size:11px;color:var(--muted);font-family:var(--f-num)}
+.axis div{display:flex;justify-content:space-between}
+.pair{display:grid;gap:5px}
+.pair .rw{grid-template-columns:120px minmax(0,1fr) 70px}
+.lg{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-top:14px;flex-wrap:wrap}
+.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+@media (max-width:560px){.rw,.pair .rw,.axis{grid-template-columns:76px minmax(0,1fr) 56px;gap:8px}}
+.c-a{--c:var(--muted)}
+.c-b{--c:var(--accent)}
+.c-pos{--c:var(--pos)}
+
+.ps{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.ps span{font-size:12px;background:var(--line2);border-radius:99px;padding:2px 10px;color:var(--muted)}
+
+.method{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.method{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.method{grid-template-columns:1fr}}
+.method .card{padding:16px 18px}
+.method h3{font-size:14.5px}
+.samples{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+.samples .card{padding:14px 18px}
+.samples .big{font-size:28px;margin-top:0}
+.samples p{margin-top:2px;font-size:13px}
+@media (max-width:640px){.samples{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.mini{display:grid;grid-template-columns:minmax(0,1fr) 1fr;gap:12px;align-items:stretch}
+@media (max-width:900px){.mini{grid-template-columns:1fr}}
+.exp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:18px;background:var(--bg)}
+.exp div{padding:12px 14px;font-size:13.5px;min-width:0}
+.exp div+div{border-left:1px solid var(--line)}
+.exp b{display:block;font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:2px}
+@media (max-width:640px){.exp{grid-template-columns:1fr}.exp div+div{border-left:0;border-top:1px solid var(--line)}}
+
+.hyp{display:grid;gap:10px}
+.h-row{display:grid;grid-template-columns:64px minmax(0,1.2fr) minmax(0,1.2fr) 130px;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px}
+.h-row .id{font-family:var(--f-num);font-weight:700;font-size:20px}
+.h-row .t{font-weight:500;font-size:14.5px}
+.h-row .r{color:var(--muted);font-size:13.5px}
+.h-row.pos{border-color:var(--pos)}
+@media (max-width:760px){.h-row{grid-template-columns:auto 1fr;gap:6px 12px}.h-row .t,.h-row .r{grid-column:1/-1}.h-row .pill{justify-self:start;grid-column:2;grid-row:1}}
+
+.meme{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:14px;border-radius:14px;overflow:hidden;background:var(--hero-bg);color:var(--hero-fg)}
+.meme div{padding:20px;min-width:0}
+.meme div+div{border-left:1px solid var(--hero-line)}
+.meme small{font-size:11px;letter-spacing:.14em;color:var(--hero-muted);font-weight:700}
+.meme strong{display:block;font-family:var(--f-num);font-size:30px;margin:2px 0 4px}
+.meme .go{color:#4FD1C5}.meme .q2{color:#F2B84B}.meme .stop{color:#FF5B55}
+.meme p{font-size:13.5px;color:var(--hero-muted)}
+.meme-cap{text-align:center;font-size:13px;color:var(--muted);margin-top:8px}
+@media (max-width:640px){.meme{grid-template-columns:1fr}.meme div+div{border-left:0;border-top:1px solid var(--hero-line)}}
+
+/* strategy */
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:24px}
+@media (max-width:640px){.dd{grid-template-columns:1fr}}
+.dd div{border-radius:14px;padding:18px 20px}
+.dd b{font-size:12px;letter-spacing:.12em;display:block;margin-bottom:4px}
+.dd .no{background:var(--neg-soft);color:var(--neg)}
+.dd .yes{background:var(--pos-soft);color:var(--pos)}
+.dd p{color:var(--fg);font-size:16px;font-weight:500}
+.ind .n{font-family:var(--f-num);color:var(--accent-fg);font-weight:700;font-size:13px}
+.ind h3{display:block;margin-top:6px;font-size:16px}
+.act{display:grid;gap:10px}
+.a-row{display:grid;grid-template-columns:44px minmax(0,.9fr) minmax(0,1.6fr) minmax(0,1.2fr);gap:16px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px}
+.a-row .i{font-family:var(--f-num);font-weight:700;color:var(--accent-fg);font-size:20px;line-height:1.3}
+.a-row h3{font-size:15px;display:block}
+.a-row p{margin-top:0;font-size:14px;color:var(--muted)}
+.a-row .kpi-l{font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:700;display:block;margin-bottom:2px}
+@media (max-width:860px){.a-row{grid-template-columns:36px 1fr;gap:6px 12px}.a-row>*:nth-child(n+3){grid-column:2}}
+.team .card{padding:18px}
+.team h3{display:block;font-size:15px}
+.team p{margin-top:6px}
+
+/* wrap-up */
+.fix{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.fix{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.fix{grid-template-columns:1fr}}
+.fix .card{display:flex;flex-direction:column;gap:6px}
+.fix .n{font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--accent-fg);letter-spacing:.1em}
+.fix h3{display:block;font-size:14.5px;line-height:1.5}
+.fix .to{font-size:13.5px;color:var(--muted);margin-top:auto;padding-top:10px;border-top:1px dashed var(--line);display:flex;gap:8px}
+.fix .to::before{content:"→";color:var(--pos);font-weight:700}
+.lim{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px;align-items:start}
+@media (max-width:900px){.lim{grid-template-columns:1fr}}
+.list{display:grid}
+.list .r{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+.list .r:last-child{border-bottom:0}
+.list .r b{font-weight:700}
+.list .r span{color:var(--muted)}
+.todo{display:grid;gap:0}
+.todo div{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px;align-items:flex-start}
+.todo div:last-child{border-bottom:0}
+.todo .sh{color:var(--accent);flex:none;margin-top:4px}
+.todo b{color:var(--accent-fg)}
+
+.tl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;position:relative}
+.tl li{position:relative;padding-top:26px;min-width:0}
+.tl li::before{content:"";position:absolute;top:7px;left:0;right:-12px;height:2px;background:var(--line)}
+.tl li:last-child::before{right:0}
+.tl li::after{content:"";position:absolute;top:0;left:0;width:16px;height:16px;border-radius:50%;background:var(--accent);border:3px solid var(--bg)}
+.tl .d{font-family:var(--f-num);font-weight:700;font-size:14px}
+.tl b{display:block;font-size:14px;margin-top:2px}
+.tl p{font-size:13px;color:var(--muted);margin-top:4px}
+@media (max-width:860px){.tl{grid-template-columns:1fr;gap:0}.tl li{padding:0 0 20px 30px}.tl li::before{top:16px;bottom:0;left:7px;right:auto;width:2px;height:auto}.tl li:last-child::before{display:none}.tl li::after{top:2px}}
+
+.final{background:var(--hero-bg);color:var(--hero-fg);margin-top:72px;padding-block:56px}
+.final .eyebrow{color:#FF4C98}
+.final blockquote{margin:16px 0 0;font-size:clamp(22px,3.2vw,34px);line-height:1.5;font-weight:700;letter-spacing:-.01em;max-width:28em;text-wrap:balance}
+.final blockquote em{font-style:normal;color:#FF4C98}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:32px}
+.three div{border:1px solid var(--hero-line);border-radius:14px;padding:16px 18px;font-size:14px;color:var(--hero-muted)}
+.three b{display:block;color:var(--hero-fg);font-size:12px;letter-spacing:.12em;margin-bottom:4px}
+.three .o{color:#4FD1C5}.three .l{color:#F2B84B}.three .s{color:#FF4C98}
+@media (max-width:760px){.three{grid-template-columns:1fr}}
+.srcs{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.srcs a{border:1px solid var(--hero-line);border-radius:99px;padding:6px 14px;font-size:13px;color:var(--hero-fg);text-decoration:none}
+.srcs a:hover{border-color:#FF4C98;color:#FF8FBF}
+.foot{color:var(--hero-muted);font-size:12.5px;margin-top:24px;max-width:50em}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:99px;font-weight:700;font-size:14px;text-decoration:none;background:#FF4C98;color:#17151A;border:1px solid #FF4C98;transition:filter .15s}
+.btn.ghost{background:transparent;color:var(--hero-fg);border-color:#4A444F}
+.btn:hover{filter:brightness(1.1)}
+.metab{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:30px;border-top:1px solid var(--hero-line)}
+.metab div{padding:14px 18px 0 0;min-width:0}
+.metab b{display:block;font-size:11px;letter-spacing:.12em;color:#FF4C98;margin-bottom:2px}
+.metab span{font-size:13.5px;color:var(--hero-muted);line-height:1.5;display:block}
+@media (max-width:860px){.metab{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.final .cta{margin-top:28px}
+
+
+.chips .sep{width:1px;background:var(--line);margin:6px 6px;flex:none}
+.chips a.pg{font-weight:700}
+.phead{background:var(--hero-bg);color:var(--hero-fg);padding-block:44px 40px}
+.phead h1{font-size:clamp(28px,4.4vw,44px);line-height:1.2;font-weight:900;letter-spacing:-.02em;margin-top:14px;max-width:20em}
+.phead h1 em{font-style:normal;color:#FF4C98}
+.phead .sub{margin-top:12px;color:var(--hero-muted);max-width:42em;font-size:16px}
+.phead .crumb{font-size:13px;color:var(--hero-muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.phead .crumb a{color:var(--hero-muted);text-decoration:none}
+.phead .crumb a:hover{color:#FF8FBF}
+section.ch.tight{padding-block:12px 8px}
+.ev{display:block;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
+.ev:hover{border-color:var(--accent);transform:translateY(-2px)}
+.ev .k{font-size:12px;letter-spacing:.1em;color:var(--accent-fg);font-weight:700}
+.ev .big{font-size:30px;margin-top:6px}
+.ev .go{display:block;margin-top:10px;font-size:13px;font-weight:700;color:var(--accent-fg)}
+.links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}
+@media (max-width:860px){.links{grid-template-columns:1fr}}
+.lk{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;transition:border-color .15s,transform .15s}
+.lk:hover{border-color:var(--accent);transform:translateY(-2px)}
+.lk .k{font-family:var(--f-num);font-size:12px;letter-spacing:.12em;color:var(--accent-fg);font-weight:700}
+.lk h3{font-size:19px;font-weight:900}
+.lk p{font-size:14px;color:var(--muted)}
+.lk .go{margin-top:auto;padding-top:12px;font-weight:700;font-size:14px;color:var(--accent-fg)}
+.pager{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:56px}
+@media (max-width:640px){.pager{grid-template-columns:1fr}}
+.pager a{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;transition:border-color .15s}
+.pager a:hover{border-color:var(--accent)}
+.pager small{display:block;font-size:12px;color:var(--muted);letter-spacing:.08em;margin-bottom:2px}
+.pager b{font-size:16px}
+.pager .nx{text-align:right}
+.pfoot{padding-block:32px 40px;color:var(--muted);font-size:12.5px}
+/* report */
+.rep{display:grid;grid-template-columns:250px minmax(0,1fr);gap:40px;padding-top:40px;align-items:start}
+@media (max-width:900px){.rep{grid-template-columns:1fr;gap:20px}}
+.toc{position:sticky;top:calc(72px + env(safe-area-inset-top,0px));background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 8px 12px}
+.toc>b{display:block;font-size:12px;letter-spacing:.12em;color:var(--muted);padding:0 12px 8px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.toc a{display:flex;gap:10px;padding:7px 12px;border-radius:8px;font-size:13.5px;text-decoration:none;color:var(--muted);line-height:1.4}
+.toc a i{font-style:normal;font-family:var(--f-num);font-weight:700;font-size:12px;color:var(--accent-fg);padding-top:1px}
+.toc a:hover{color:var(--fg)}
+.toc a.on{background:var(--accent-soft);color:var(--accent-fg);font-weight:700}
+@media (max-width:900px){.toc{position:static}.toc ol{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.toc ol{grid-template-columns:1fr}}
+.doc{min-width:0}
+.rs{scroll-margin-top:72px;padding-bottom:44px}
+.rs h2{font-size:clamp(20px,2.6vw,26px);font-weight:900;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:2px solid var(--fg)}
+.rs h2 .sh{color:var(--accent);flex:none}
+.rs .sub-h{margin-top:28px}
+.bl{margin:16px 0 0;padding:0;list-style:none;display:grid;gap:6px;font-size:14.5px}
+.bl li{display:flex;gap:10px}
+.bl li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);margin-top:.7em;flex:none}
+.bl b{color:var(--accent-fg)}
+.tw{overflow-x:auto;margin-top:14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.rt{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+.rt th,.rt td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.55}
+.rt thead th{background:var(--fg);color:var(--bg);font-size:12.5px;letter-spacing:.04em;border-bottom:0;white-space:nowrap}
+.rt tr:last-child td,.rt tr:last-child th{border-bottom:0}
+.rt td:first-child{background:var(--bg)}
+.rt.kv{min-width:0}
+.rt.kv th{width:130px;background:var(--bg);font-weight:700;white-space:nowrap}
+.rt .ac{color:var(--accent-fg);font-weight:700}
+.rt td.ac{font-family:var(--f-num)}
+.rt .pos{color:var(--pos);font-weight:700}
+.flowx{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:center;margin-top:14px}
+.flowx div{border-radius:12px;padding:16px;text-align:center;background:var(--card);border:1px solid var(--line)}
+.flowx div b{display:block;font-size:26px}
+.flowx div span{font-size:12.5px;color:var(--muted)}
+.flowx .neg{background:var(--neg-soft);border-color:transparent}.flowx .neg b{color:var(--neg)}
+.flowx .pos{background:var(--pos-soft);border-color:transparent}.flowx .pos b{color:var(--pos)}
+.flowx i{font-style:normal;color:var(--accent);font-weight:700}
+@media (max-width:640px){.flowx{grid-template-columns:1fr}.flowx i{display:none}}
+.srcnote{font-size:13px;color:var(--muted);margin-top:12px}
+.rs .dd{margin-top:18px}
+.rs .cond{margin-top:14px}
 </style>
-</head>
-<body>
-<header>
-  <div>
-    <h1>상가(상권)정보 요약 대시보드</h1>
-    <div class="meta">소상공인시장진흥공단 상가(상권)정보 202606 · 정리본 2,749,105개 · 오프라인 전용 (인터넷 없이 동작)</div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="o" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.6"/></symbol>
+    <symbol id="t" viewBox="0 0 24 24"><path d="M12 3.5 22 20.5H2Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></symbol>
+    <symbol id="s" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="1.5" fill="none" stroke="currentColor" stroke-width="2.6"/></symbol>
+  </defs>
+</svg>
+<header class="nav"><div class="wrap">
+    <a class="brand" href="index.html" aria-label="Rewatch Impact Lab, Overview로 이동">
+      <span class="lg" aria-hidden="true">🎯</span>
+      <span class="bt"><b>Rewatch Impact Lab</b><small>Netflix 신규 시즌 공개에 따른 이전 시즌 재유입 분석</small></span>
+    </a>
+    <nav class="chips" aria-label="페이지"><a href="#overview" data-s="overview">Overview</a><a href="#eda" data-s="eda">EDA</a><a href="#modeling" data-s="modeling">Modeling</a><span class="sep" aria-hidden="true"></span><a class="pg" href="insight.html">Business Insight</a><a class="pg" href="archive.html">Archive</a><a class="pg" href="report.html">Full Report</a></nav>
+  </div></header>
+<main id="top">
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><b>REPORT &amp; INSIGHT</b></div>
+    <h1>신규 시즌 공개는 이전 시즌 <em>재활성화</em>의 기회인가?</h1>
+    <p class="sub">넷플릭스 TOP 10 데이터 기반 이전 시즌 동반 유입 분석 및 글로벌 콘텐츠 전략 제안</p>
+    <div class="cta"><a class="btn" href="#modeling">분석 결과 보기 →</a><a class="btn ghost" href="insight.html">Business Insight</a><a class="btn ghost" href="report.html">Full Report</a></div>
+    <div class="metab">
+      <div><b>분석 주체</b><span>Netflix 시즌 재활성화 사업</span></div>
+      <div><b>의사결정</b><span>신규 시즌 공개 때 이전 시즌을 함께 소개할지</span></div>
+      <div><b>분석 기준</b><span>Netflix TOP 10 차트 기록 + TMDB 작품 정보</span></div>
+      <div><b>검토 질문</b><span>신규 시즌 공개가 이전 시즌 관심을 되살리는가</span></div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><svg class="sh"><use href="#o"/></svg><strong class="num">462<small>건</small></strong><p>최종 신규 시즌 후보</p></div>
+      <div class="kpi"><svg class="sh"><use href="#t"/></svg><strong class="num">80.7<small>%</small></strong><p>이전 시즌 동시 등장 (373 / 462건)</p></div>
+      <div class="kpi"><svg class="sh"><use href="#s"/></svg><strong class="num">308<small>건</small></strong><p>재진입이 확인된 후보</p></div>
+      <div class="kpi"><svg class="sh"><use href="#o"/></svg><strong class="num">6.7<small>%</small></strong><p>공개 간격의 설명력 (R²)</p></div>
+    </div>
+    <div class="verdict">
+      <div><b>관찰됨</b><p>신규 시즌 첫 TOP 10 주에 이전 시즌의 동반 진입·재진입이 보임</p></div>
+      <div><b>예측 어려움</b><p>공개 간격 ↔ 이전 시즌 시청 비중은 상관·회귀 모두 예측력 확정 불가</p></div>
+      <div><b>제안</b><p>이전 시즌을 함께 소개하고, 국가별 실제 시청 결과로 효과를 검증</p></div>
+    </div>
   </div>
-  <div class="spacer"></div>
-  <button id="reportBtn">분석 리포트 다운로드</button>
-</header>
-<main>
-  <div class="stats" id="stats"><div class="card stat"><div class="num">2,749,105</div><div class="lab">전체 가게 수</div><div class="sub">정리 후 총 보유 가게 (원본 2,772,484개)</div></div><div class="card stat"><div class="num">10</div><div class="lab">업종 수</div><div class="sub">대분류 기준</div></div><div class="card stat"><div class="num">16</div><div class="lab">지역 수</div><div class="sub">시·도 기준 (전남·광주는 원본에서 통합)</div></div></div>
+</div>
 
-  <h2>데이터 정리 과정 요약</h2>
-  <table>
-    <tbody><tr><th style="width:26%">발견된 문제</th><th style="width:34%">처리 방법</th><th style="width:22%">결과</th><th style="width:18%">규모</th></tr>
-    <tr><td>동정보·호정보 열이 100% 빈칸</td><td>두 열 삭제</td><td>39열 → 37열</td><td class="n">2열 삭제</td></tr>
-    <tr><td>층정보 표기 뒤섞임 (B1, '지', '반지층')</td><td>지하를 전부 음수로 통일 (B1→-1, B2→-2, '지'·'반'·'반지층'→-1)</td><td>전부 숫자로</td><td class="n">20,016건 변환</td></tr>
-    <tr><td>주소에 지역명 반복 (세종특별자치시 세종특별자치시)</td><td>연속으로 반복된 토큰 삭제</td><td>"세종특별자치시 어진동" 형태로</td><td class="n">15,816행·31,632칸</td></tr>
-    <tr><td>상호명이 '업소명없음'</td><td>'이름 없음'으로 변경</td><td>—</td><td class="n">3,571건</td></tr>
-    <tr><td>위도·경도가 한국 밖</td><td>해당 행 제외</td><td>원본에 없어 제외 0건</td><td class="n">0건</td></tr>
-    <tr><td>같은 가게 중복 등재 (상호명+지번주소+층 동일)</td><td>뒤에 나온 행 제거, 1개만 유지</td><td>행 감소</td><td class="n">23,379행 제외</td></tr>
-    <tr><td colspan="3"><b>최종</b>: 원본 2,772,484개 → 정리 후 <b>2,749,105개</b></td><td class="n">-23,379 (-0.8%)</td></tr>
-  </tbody></table>
+<div class="wrap flow">
+  <h2>프로젝트 흐름</h2>
+  <ol class="steps">
+    <li><a href="#overview"><i>01</i><b>문제 정의</b><span>질문 4가지</span></a></li>
+    <li><a href="#data-src"><i>02</i><b>데이터 수집</b><span>TOP 10 + TMDB</span></a></li>
+    <li><a href="#data-clean"><i>03</i><b>정제 · EDA</b><span>490 → 462건</span></a></li>
+    <li><a href="#data-def"><i>04</i><b>재진입 정의</b><span>세 조건</span></a></li>
+    <li><a href="#modeling"><i>05</i><b>분석</b><span>상관 · 회귀</span></a></li>
+    <li><a href="#hyp"><i>06</i><b>가설 검증</b><span>5개 판정</span></a></li>
+    <li><a href="insight.html"><i>07</i><b>전략 제안</b><span>Business Insight</span></a></li>
+    <li><a href="archive.html"><i>08</i><b>한계 · 다음</b><span>Archive</span></a></li>
+  </ol>
+</div>
 
-  <div class="controls">
-    <label for="region">지역 선택</label>
-    <select id="region"><option value="__ALL__">전체 (16개 시·도)</option><option value="경기도">경기도</option><option value="서울특별시">서울특별시</option><option value="전남광주통합특별시">전남광주통합특별시</option><option value="경상남도">경상남도</option><option value="부산광역시">부산광역시</option><option value="경상북도">경상북도</option><option value="인천광역시">인천광역시</option><option value="충청남도">충청남도</option><option value="대구광역시">대구광역시</option><option value="강원특별자치도">강원특별자치도</option><option value="전북특별자치도">전북특별자치도</option><option value="충청북도">충청북도</option><option value="대전광역시">대전광역시</option><option value="제주특별자치도">제주특별자치도</option><option value="울산광역시">울산광역시</option><option value="세종특별자치시">세종특별자치시</option></select>
-    <span style="font-size:12.5px;color:var(--sub)">선택하면 아래 4개 그래프가 그 지역 기준으로 바뀝니다.</span>
+<section class="ch wrap" id="overview">
+  <div class="ch-head">
+    <div><span class="tag">01 · OVERVIEW</span><h2>신규 시즌 공개가 이전 시즌 관심을 되살릴까?</h2></div>
+    <p>“새 시즌을 낼 때 이전 시즌을 함께 노출할 만한가”를 네 가지 질문으로 나눴습니다.</p>
+  </div>
+  <p class="lead">신규 시즌 공개가 이전 시즌에 대한 관심을 되살릴 가능성을 <b>차트 기록</b>으로 확인합니다. 차트상 재진입 현상을 정의하고, 공개 간격(gap_days)과 이전 시즌 시청 비중(prior_share)의 관계를 데이터로 봅니다.</p>
+  <div class="grid g4" style="margin-top:24px">
+    <article class="card q"><span class="qn">Q1</span><h3>신규 시즌 첫 TOP 10 주에 이전 시즌도 함께 등장하는가?</h3><p class="goal">동반 진입 현황 파악</p><div class="ans"><span>답</span><b class="num">80.7%</b><span>373 / 462건</span></div></article>
+    <article class="card q"><span class="qn">Q2</span><h3>직전 주 차트에 없다가 다시 등장한 재진입은 얼마나 되는가?</h3><p class="goal">재진입 현황 파악</p><div class="ans"><span>답</span><b class="num">308건</b><span>후보 462건 중</span></div></article>
+    <article class="card q"><span class="qn">Q3</span><h3>공개 간격과 이전 시즌 시청 비중은 어떤 관계인가?</h3><p class="goal">관계 탐색 + 기준 모델 대비 예측 성능 비교</p><div class="ans"><span>답</span><b class="num">R² 6.7%</b><span>예측력 확정 불가</span></div></article>
+    <article class="card q"><span class="qn">Q4</span><h3>결과를 이전 시즌 소개·정주행 유도 전략으로 연결할 수 있는가?</h3><p class="goal">통계 결과와 한계를 구분해 실행 제안 도출</p><div class="ans"><span>답</span><b class="num">4대 제안</b><span>실행 후 검증</span></div></article>
+  </div>
+  <div class="note warn"><b>전제</b><span>TOP 10 동반 등장만으로 재시청·인과효과는 증명할 수 없습니다. 모든 결론은 차트 기록 기준입니다.</span></div>
+</section><section class="ch wrap" id="eda">
+  <div class="ch-head">
+    <div><span class="tag">02 · EDA</span><h2>TOP 10 주간 기록과 TMDB를 작품·시즌·주차로 연결</h2></div>
+    <p>데이터 범위, 후보 정제, EDA, 재진입 정의, 해석 주의까지.</p>
   </div>
 
-  <div class="charts">
-    <div class="card chart-card"><h3 id="t1">1. 업종별 가게 수 — 전체 (16개 시·도)</h3><svg id="c1" viewBox="0 0 940 458" style="width: 100%; height: auto;"><text x="170" y="40.5" text-anchor="end" font-size="13" fill="#22272e">음식</text><rect x="180" y="18" width="664" height="13" rx="2" fill="#4C72B0"></rect><text x="850" y="28.5" font-size="11.5" fill="#57606a">831,832</text><text x="170" y="84.5" text-anchor="end" font-size="13" fill="#22272e">소매</text><rect x="180" y="62" width="513.1002702468768" height="13" rx="2" fill="#4C72B0"></rect><text x="699.1002702468768" y="72.5" font-size="11.5" fill="#57606a">642,791</text><text x="170" y="128.5" text-anchor="end" font-size="13" fill="#22272e">수리·개인</text><rect x="180" y="106" width="261.90511545600555" height="13" rx="2" fill="#4C72B0"></rect><text x="447.90511545600555" y="116.5" font-size="11.5" fill="#57606a">328,104</text><text x="170" y="172.5" text-anchor="end" font-size="13" fill="#22272e">과학·기술</text><rect x="180" y="150" width="232.3455601611864" height="13" rx="2" fill="#4C72B0"></rect><text x="418.3455601611864" y="160.5" font-size="11.5" fill="#57606a">291,073</text><text x="170" y="216.5" text-anchor="end" font-size="13" fill="#22272e">교육</text><rect x="180" y="194" width="144.44198347743296" height="13" rx="2" fill="#4C72B0"></rect><text x="330.4419834774329" y="204.5" font-size="11.5" fill="#57606a">180,951</text><text x="170" y="260.5" text-anchor="end" font-size="13" fill="#22272e">시설관리·임대</text><rect x="180" y="238" width="95.00310639648391" height="13" rx="2" fill="#4C72B0"></rect><text x="281.00310639648393" y="248.5" font-size="11.5" fill="#57606a">119,016</text><text x="170" y="304.5" text-anchor="end" font-size="13" fill="#22272e">예술·스포츠</text><rect x="180" y="282" width="91.32402696698371" height="13" rx="2" fill="#4C72B0"></rect><text x="277.3240269669837" y="292.5" font-size="11.5" fill="#57606a">114,407</text><text x="170" y="348.5" text-anchor="end" font-size="13" fill="#22272e">부동산</text><rect x="180" y="326" width="83.63300281787669" height="13" rx="2" fill="#4C72B0"></rect><text x="269.6330028178767" y="336.5" font-size="11.5" fill="#57606a">104,772</text><text x="170" y="392.5" text-anchor="end" font-size="13" fill="#22272e">숙박</text><rect x="180" y="370" width="62.98657421210052" height="13" rx="2" fill="#4C72B0"></rect><text x="248.98657421210052" y="380.5" font-size="11.5" fill="#57606a">78,907</text><text x="170" y="436.5" text-anchor="end" font-size="13" fill="#22272e">보건의료</text><rect x="180" y="414" width="45.70072803162177" height="13" rx="2" fill="#4C72B0"></rect><text x="231.70072803162176" y="424.5" font-size="11.5" fill="#57606a">57,252</text></svg><div class="legend" id="l1"><span><i style="background:#4C72B0"></i>가게 수</span></div><p class="note" id="n1">※ 음식(831,832개)·소매(642,791개) 두 업종이 이 지역 전체의 53.6%를 차지</p></div>
-    <div class="card chart-card"><h3 id="t2">2. 지역(시·도)별 가게 수</h3><svg id="c2" viewBox="0 0 940 722" style="width: 100%; height: auto;"><text x="170" y="40.5" text-anchor="end" font-size="13" fill="#22272e">경기도</text><rect x="180" y="18" width="664" height="13" rx="2" fill="#4C72B0"></rect><text x="850" y="28.5" font-size="11.5" fill="#57606a">666,817</text><text x="170" y="84.5" text-anchor="end" font-size="13" fill="#22272e">서울특별시</text><rect x="180" y="62" width="547.8776455909193" height="13" rx="2" fill="#4C72B0"></rect><text x="733.8776455909193" y="72.5" font-size="11.5" fill="#57606a">550,202</text><text x="170" y="128.5" text-anchor="end" font-size="13" fill="#22272e">전남광주통합특별시</text><rect x="180" y="106" width="173.19024559961727" height="13" rx="2" fill="#4C72B0"></rect><text x="359.19024559961724" y="116.5" font-size="11.5" fill="#57606a">173,925</text><text x="170" y="172.5" text-anchor="end" font-size="13" fill="#22272e">경상남도</text><rect x="180" y="150" width="170.63707733906003" height="13" rx="2" fill="#4C72B0"></rect><text x="356.63707733906006" y="160.5" font-size="11.5" fill="#57606a">171,361</text><text x="170" y="216.5" text-anchor="end" font-size="13" fill="#22272e">부산광역시</text><rect x="180" y="194" width="157.8403669972421" height="13" rx="2" fill="#4C72B0"></rect><text x="343.8403669972421" y="204.5" font-size="11.5" fill="#57606a">158,510</text><text x="170" y="260.5" text-anchor="end" font-size="13" fill="#22272e">경상북도</text><rect x="180" y="238" width="142.98140569301623" height="13" rx="2" fill="#4C72B0"></rect><text x="328.9814056930162" y="248.5" font-size="11.5" fill="#57606a">143,588</text><text x="170" y="304.5" text-anchor="end" font-size="13" fill="#22272e">인천광역시</text><rect x="180" y="282" width="135.1058176381226" height="13" rx="2" fill="#4C72B0"></rect><text x="321.10581763812263" y="292.5" font-size="11.5" fill="#57606a">135,679</text><text x="170" y="348.5" text-anchor="end" font-size="13" fill="#22272e">충청남도</text><rect x="180" y="326" width="122.84583026527518" height="13" rx="2" fill="#4C72B0"></rect><text x="308.8458302652752" y="336.5" font-size="11.5" fill="#57606a">123,367</text><text x="170" y="392.5" text-anchor="end" font-size="13" fill="#22272e">대구광역시</text><rect x="180" y="370" width="116.9050339148522" height="13" rx="2" fill="#4C72B0"></rect><text x="302.9050339148522" y="380.5" font-size="11.5" fill="#57606a">117,401</text><text x="170" y="436.5" text-anchor="end" font-size="13" fill="#22272e">강원특별자치도</text><rect x="180" y="414" width="108.60325396623062" height="13" rx="2" fill="#4C72B0"></rect><text x="294.6032539662306" y="424.5" font-size="11.5" fill="#57606a">109,064</text><text x="170" y="480.5" text-anchor="end" font-size="13" fill="#22272e">전북특별자치도</text><rect x="180" y="458" width="97.52724360656671" height="13" rx="2" fill="#4C72B0"></rect><text x="283.5272436065667" y="468.5" font-size="11.5" fill="#57606a">97,941</text><text x="170" y="524.5" text-anchor="end" font-size="13" fill="#22272e">충청북도</text><rect x="180" y="502" width="92.42190286090486" height="13" rx="2" fill="#4C72B0"></rect><text x="278.4219028609049" y="512.5" font-size="11.5" fill="#57606a">92,814</text><text x="170" y="568.5" text-anchor="end" font-size="13" fill="#22272e">대전광역시</text><rect x="180" y="546" width="79.72377428889786" height="13" rx="2" fill="#4C72B0"></rect><text x="265.72377428889786" y="556.5" font-size="11.5" fill="#57606a">80,062</text><text x="170" y="612.5" text-anchor="end" font-size="13" fill="#22272e">제주특별자치도</text><rect x="180" y="590" width="58.190130125656665" height="13" rx="2" fill="#4C72B0"></rect><text x="244.19013012565665" y="600.5" font-size="11.5" fill="#57606a">58,437</text><text x="170" y="656.5" text-anchor="end" font-size="13" fill="#22272e">울산광역시</text><rect x="180" y="634" width="54.05666622176699" height="13" rx="2" fill="#4C72B0"></rect><text x="240.056666221767" y="644.5" font-size="11.5" fill="#57606a">54,286</text><text x="170" y="700.5" text-anchor="end" font-size="13" fill="#22272e">세종특별자치시</text><rect x="180" y="678" width="15.584881609197126" height="13" rx="2" fill="#4C72B0"></rect><text x="201.5848816091971" y="688.5" font-size="11.5" fill="#57606a">15,651</text></svg><p class="note" id="n2">※ 경기도(666,817개)·서울특별시(550,202개)에 전체의 44.3%가 몰려 있고 가장 적은 곳은 세종특별자치시(15,651개)</p></div>
-    <div class="card chart-card"><h3 id="t3">3. 지역과 업종 비교 (업종 구성비 %) — 전체 (16개 시·도)</h3><svg id="c3" viewBox="0 0 940 458" style="width: 100%; height: auto;"><text x="170" y="40.5" text-anchor="end" font-size="13" fill="#22272e">음식</text><rect x="180" y="18" width="664" height="13" rx="2" fill="#4C72B0"></rect><text x="850" y="28.5" font-size="11.5" fill="#57606a">30.3%</text><text x="170" y="84.5" text-anchor="end" font-size="13" fill="#22272e">소매</text><rect x="180" y="62" width="513.1002702468768" height="13" rx="2" fill="#4C72B0"></rect><text x="699.1002702468768" y="72.5" font-size="11.5" fill="#57606a">23.4%</text><text x="170" y="128.5" text-anchor="end" font-size="13" fill="#22272e">수리·개인</text><rect x="180" y="106" width="261.9051154560056" height="13" rx="2" fill="#4C72B0"></rect><text x="447.9051154560056" y="116.5" font-size="11.5" fill="#57606a">11.9%</text><text x="170" y="172.5" text-anchor="end" font-size="13" fill="#22272e">과학·기술</text><rect x="180" y="150" width="232.34556016118646" height="13" rx="2" fill="#4C72B0"></rect><text x="418.3455601611864" y="160.5" font-size="11.5" fill="#57606a">10.6%</text><text x="170" y="216.5" text-anchor="end" font-size="13" fill="#22272e">교육</text><rect x="180" y="194" width="144.44198347743296" height="13" rx="2" fill="#4C72B0"></rect><text x="330.4419834774329" y="204.5" font-size="11.5" fill="#57606a">6.6%</text><text x="170" y="260.5" text-anchor="end" font-size="13" fill="#22272e">시설관리·임대</text><rect x="180" y="238" width="95.00310639648391" height="13" rx="2" fill="#4C72B0"></rect><text x="281.00310639648393" y="248.5" font-size="11.5" fill="#57606a">4.3%</text><text x="170" y="304.5" text-anchor="end" font-size="13" fill="#22272e">예술·스포츠</text><rect x="180" y="282" width="91.32402696698372" height="13" rx="2" fill="#4C72B0"></rect><text x="277.32402696698375" y="292.5" font-size="11.5" fill="#57606a">4.2%</text><text x="170" y="348.5" text-anchor="end" font-size="13" fill="#22272e">부동산</text><rect x="180" y="326" width="83.63300281787672" height="13" rx="2" fill="#4C72B0"></rect><text x="269.63300281787673" y="336.5" font-size="11.5" fill="#57606a">3.8%</text><text x="170" y="392.5" text-anchor="end" font-size="13" fill="#22272e">숙박</text><rect x="180" y="370" width="62.98657421210052" height="13" rx="2" fill="#4C72B0"></rect><text x="248.98657421210052" y="380.5" font-size="11.5" fill="#57606a">2.9%</text><text x="170" y="436.5" text-anchor="end" font-size="13" fill="#22272e">보건의료</text><rect x="180" y="414" width="45.70072803162177" height="13" rx="2" fill="#4C72B0"></rect><text x="231.70072803162176" y="424.5" font-size="11.5" fill="#57606a">2.1%</text></svg><div class="legend" id="l3"><span><i style="background:#4C72B0"></i>전국 구성비</span></div><p class="note" id="n3">※ 전국 기준 업종 구성비 — 음식(30.3%)·소매(23.4%) 순</p></div>
-    <div class="card chart-card"><h3 id="t4">4. 음식점 세부 종류 TOP 15 (소분류) — 전체 (16개 시·도)</h3><svg id="c4" viewBox="0 0 940 678" style="width: 100%; height: auto;"><text x="170" y="40.5" text-anchor="end" font-size="13" fill="#22272e">백반/한정식</text><rect x="180" y="18" width="664" height="13" rx="2" fill="#4C72B0"></rect><text x="850" y="28.5" font-size="11.5" fill="#57606a">178,855</text><text x="170" y="84.5" text-anchor="end" font-size="13" fill="#22272e">카페</text><rect x="180" y="62" width="450.5495513125157" height="13" rx="2" fill="#4C72B0"></rect><text x="636.5495513125156" y="72.5" font-size="11.5" fill="#57606a">121,360</text><text x="170" y="128.5" text-anchor="end" font-size="13" fill="#22272e">요리 주점</text><rect x="180" y="106" width="206.0737021609684" height="13" rx="2" fill="#4C72B0"></rect><text x="392.0737021609684" y="116.5" font-size="11.5" fill="#57606a">55,508</text><text x="170" y="172.5" text-anchor="end" font-size="13" fill="#22272e">돼지고기 구이/찜</text><rect x="180" y="150" width="203.99841212155098" height="13" rx="2" fill="#4C72B0"></rect><text x="389.998412121551" y="160.5" font-size="11.5" fill="#57606a">54,949</text><text x="170" y="216.5" text-anchor="end" font-size="13" fill="#22272e">김밥/만두/분식</text><rect x="180" y="194" width="163.35019988258645" height="13" rx="2" fill="#4C72B0"></rect><text x="349.3501998825865" y="204.5" font-size="11.5" fill="#57606a">44,000</text><text x="170" y="260.5" text-anchor="end" font-size="13" fill="#22272e">치킨</text><rect x="180" y="238" width="147.77624332559893" height="13" rx="2" fill="#4C72B0"></rect><text x="333.7762433255989" y="248.5" font-size="11.5" fill="#57606a">39,805</text><text x="170" y="304.5" text-anchor="end" font-size="13" fill="#22272e">국/탕/찌개류</text><rect x="180" y="282" width="117.51933130189259" height="13" rx="2" fill="#4C72B0"></rect><text x="303.5193313018926" y="292.5" font-size="11.5" fill="#57606a">31,655</text><text x="170" y="348.5" text-anchor="end" font-size="13" fill="#22272e">빵/도넛</text><rect x="180" y="326" width="114.93914064465628" height="13" rx="2" fill="#4C72B0"></rect><text x="300.9391406446563" y="336.5" font-size="11.5" fill="#57606a">30,960</text><text x="170" y="392.5" text-anchor="end" font-size="13" fill="#22272e">중국집</text><rect x="180" y="370" width="101.48873668614242" height="13" rx="2" fill="#4C72B0"></rect><text x="287.48873668614243" y="380.5" font-size="11.5" fill="#57606a">27,337</text><text x="170" y="436.5" text-anchor="end" font-size="13" fill="#22272e">일반 유흥 주점</text><rect x="180" y="414" width="92.02556260658075" height="13" rx="2" fill="#4C72B0"></rect><text x="278.02556260658076" y="424.5" font-size="11.5" fill="#57606a">24,788</text><text x="170" y="480.5" text-anchor="end" font-size="13" fill="#22272e">국수/칼국수</text><rect x="180" y="458" width="75.37497973218528" height="13" rx="2" fill="#4C72B0"></rect><text x="261.3749797321853" y="468.5" font-size="11.5" fill="#57606a">20,303</text><text x="170" y="524.5" text-anchor="end" font-size="13" fill="#22272e">경양식</text><rect x="180" y="502" width="72.08570070727684" height="13" rx="2" fill="#4C72B0"></rect><text x="258.0857007072768" y="512.5" font-size="11.5" fill="#57606a">19,417</text><text x="170" y="568.5" text-anchor="end" font-size="13" fill="#22272e">일식 회/초밥</text><rect x="180" y="546" width="71.87780045288083" height="13" rx="2" fill="#4C72B0"></rect><text x="257.8778004528808" y="556.5" font-size="11.5" fill="#57606a">19,361</text><text x="170" y="612.5" text-anchor="end" font-size="13" fill="#22272e">횟집</text><rect x="180" y="590" width="71.34691230326241" height="13" rx="2" fill="#4C72B0"></rect><text x="257.3469123032624" y="600.5" font-size="11.5" fill="#57606a">19,218</text><text x="170" y="656.5" text-anchor="end" font-size="13" fill="#22272e">피자</text><rect x="180" y="634" width="64.42680383550922" height="13" rx="2" fill="#4C72B0"></rect><text x="250.42680383550922" y="644.5" font-size="11.5" fill="#57606a">17,354</text></svg><p class="note" id="n4">※ 이 지역 음식점 831,832개 중 1위는 백반/한정식(178,855개, 21.5%), 뒤이어 카페(121,360개)</p></div>
+  <h3 class="sub-h" id="data-src">데이터와 분석 범위</h3>
+  <div class="grid g3">
+    <article class="card src"><span class="k">Netflix Tudum TOP 10</span><h3 style="margin-top:6px">글로벌·국가별 주간 TSV 2종</h3><ul><li>all-weeks-global.tsv · 글로벌 TOP 10, 시청시간</li><li>all-weeks-countries.tsv · 국가별 TOP 10, 동반 진입 범위</li></ul></article>
+    <article class="card src"><span class="k">TMDB API</span><h3 style="margin-top:6px">작품 정보 보완</h3><ul><li>TV Search로 작품 매칭</li><li>원작 언어 · 시즌/시리즈 · 러닝타임 확인</li></ul></article>
+    <article class="card src"><span class="k">연결 단위</span><h3 style="margin-top:6px">작품 · 시즌 · 주차</h3><ul><li>신규·이전 시즌의 TOP 10 기록이 같은 주에 함께 있는지 확인</li></ul></article>
+  </div>
+  <div class="stat-row">
+    <div class="card"><p style="margin:0">분석 기간</p><div class="big">2021.07.04 – 2026.11.15</div><p>5년 4개월</p></div>
+    <div class="card"><p style="margin:0">신규 시즌 후보</p><div class="big">462건</div><p>실제 공개일이 아닌 ‘관찰된 첫 TOP 10 등장 주’ 기준</p></div>
+    <div class="card"><p style="margin:0">고유 작품</p><div class="big">283개</div><p>국가별 행은 독립 사례로 보지 않음</p></div>
+  </div>
+  <div class="note warn"><b>해석 주의</b><span>TOP 10은 차트 진입 기록입니다. TOP 10 밖 시청량과 개별 이용자의 재시청 행동은 관측할 수 없습니다.</span></div>
+
+  <h3 class="sub-h" id="data-clean">후보 정제 <small>판정 불가 28건을 빼고 462건으로 분석</small></h3>
+  <div class="card chart">
+    <h3>초기 후보 490건 → 최종 분석 후보 462건 <span class="pill pos" style="margin-left:6px">전체의 94%</span></h3>
+    <div class="stack" role="img" aria-label="분석 대상 462건, 초기 구간 제외 9건, 잘못 포함 19건">
+      <div class="ok">분석 대상 462</div><div class="x1" title="초기 구간 9건"></div><div class="x2" title="잘못 포함 19건"></div>
+    </div>
+    <div class="legend"><span><i style="background:var(--pos)"></i>분석 대상 462건 (94%)</span><span><i style="background:var(--neg)"></i>초기 구간 9건 · 데이터 시작(2021.07) 직후라 이전 시즌 이력 확인 불가</span><span><i style="background:var(--warn)"></i>잘못 포함 19건 · 후보 조건에 맞지 않음</span></div>
+    <ol class="pipe">
+      <li><b>시즌명 정리</b>Season·Part·Volume 표기 규칙 검토</li>
+      <li><b>후보 추출</b>신규 시즌의 첫 TOP 10 등장 주</li>
+      <li><b>후보 정제</b>이력 없는 9건, 잘못 포함 19건 제외</li>
+      <li><b>이전 시즌 연결</b>작품·시즌·주차로 기록 연결</li>
+      <li><b>재진입 기준 보완</b>직전 주로 연속 등장과 구분</li>
+      <li><b>공개 간격 산출</b>날짜 불확실·결측 사례 제외</li>
+    </ol>
   </div>
 
-  <footer>
-    ※ '전남광주통합특별시'는 원본 데이터에서 전라남도와 광주광역시가 하나의 시도명으로 통합 제공되어 그렇게 표기된 것입니다.<br>
-    ※ 업종은 대분류 기준, 음식점 세부 종류는 소분류 기준입니다. 이 파일 하나로 모든 데이터가 내장되어 있어 인터넷 연결 없이 열 수 있습니다.
-  </footer>
+  <h3 class="sub-h">EDA 주요 현황</h3>
+  <div class="eda">
+    <div class="card donut">
+      <svg viewBox="0 0 120 120" role="img" aria-label="동시 등장 80.7%">
+        <circle cx="60" cy="60" r="48" fill="none" stroke="var(--line2)" stroke-width="12"/>
+        <circle cx="60" cy="60" r="48" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="243.4 301.6" transform="rotate(-90 60 60)"/>
+        <text class="t" x="60" y="62" text-anchor="middle">80.7%</text>
+        <text class="s" x="60" y="80" text-anchor="middle">373 / 462건</text>
+      </svg>
+      <p>후보 5건 중 약 4건에서 이전 시즌 동반 등장 · 미등장 89건</p>
+    </div>
+    <div class="card">
+      <div class="tbl">
+        <div class="r h"><div>지표</div><div>결과</div><div>해석</div></div>
+        <div class="r"><b>최종 신규 시즌 후보</b><div class="v">462건</div><span>정제 후 분석 후보</span></div>
+        <div class="r"><b>고유 작품 수</b><div class="v">283개</div><span>후속 시즌 후보에 연결된 작품</span></div>
+        <div class="r"><b>같은 주 이전 시즌 동시 등장</b><div class="v">373 / 462건</div><span>후보 5건 중 약 4건에서 관찰</span></div>
+        <div class="r"><b>이전 시즌 동시 등장 기록</b><div class="v">687건</div><span>이전 시즌 기록 단위</span></div>
+        <div class="r"><b>이전 시즌 재진입 기록</b><div class="v">596건</div><span>이전 시즌 기록 단위</span></div>
+        <div class="r"><b>후보 단위 재진입</b><div class="v">308 / 462건</div><span>재진입 1개 이상 확인된 후보</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="note warn"><b>단위 구분</b><span>596건은 이전 시즌 기록 단위, 308건은 신규 시즌 후보 단위입니다. 서로 다른 단위이므로 직접 비교하지 않습니다.</span></div>
+
+  <div class="note key"><b>왜 중요한가</b><span>동반 등장이 후보 5건 중 4건에서 관찰된다는 것은, 신규 시즌 공개 시점이 이전 시즌을 함께 소개할 자연스러운 기회라는 뜻입니다. 다만 차트 기록이므로 실제 시청자 재유입으로 읽지 않습니다.</span></div>
+
+  <h3 class="sub-h" id="data-def">재진입 정의 <small>세 조건을 모두 충족할 때만 재진입으로 판정</small></h3>
+  <div class="cond">
+    <div class="card"><svg class="sh"><use href="#o"/></svg><h3>이전 시즌이 신규 시즌보다 <em>먼저</em> TOP 10에 등장한 기록이 있음</h3></div>
+    <div class="card"><svg class="sh"><use href="#t"/></svg><h3>신규 시즌 첫 등장 <em>직전 주</em>에는 해당 이전 시즌이 차트에 <em>없음</em></h3></div>
+    <div class="card"><svg class="sh"><use href="#s"/></svg><h3>신규 시즌 첫 등장 주에 해당 이전 시즌이 <em>다시 등장</em></h3></div>
+  </div>
+  <div class="excl">
+    <div>직전 주에도 차트에 있었다면 → <b>연속 등장</b> (재진입 아님)</div>
+    <div>이전 기록이 없다면 → <b>재진입으로 분류하지 않음</b></div>
+  </div>
+
+  <h3 class="sub-h">이 보고서의 범위 <small>차트 재진입은 실제 이용자 재유입과 다릅니다</small></h3>
+  <div class="vs">
+    <div class="r"><div class="h">구분</div><div class="h a">본 것 · 차트 기록</div><div class="h b">확인하지 못한 것 · 실제 이용자</div></div>
+    <div class="r"><b>동반 등장</b><span>신규 시즌 첫 주, 이전 시즌도 TOP 10 (373/462건)</span><span>이전 시즌 실제 시청자 수</span></div>
+    <div class="r"><b>재진입</b><span>직전 주 부재 → TOP 10 재진입 (308/462건)</span><span>새 유입인지, 기존 시청자의 재시청인지</span></div>
+    <div class="r"><b>시청 비중</b><span>TOP 10 시청시간 기반 지표 (prior_share)</span><span>TOP 10 밖 시청량, 개별 시청 행동</span></div>
+    <div class="r"><b>원인</b><span>신규·이전 시즌이 같은 주에 함께 관찰됨</span><span>공개·마케팅의 인과 효과</span></div>
+  </div>
+</section><section class="ch wrap" id="modeling">
+  <div class="ch-head">
+    <div><span class="tag">03 · MODELING</span><h2>작은 표본에 맞춘 비모수·순위 기반 분석</h2></div>
+    <p>모든 결과는 확정이 아닌 ‘신호’로만 해석합니다.</p>
+  </div>
+
+  <h3 class="sub-h">분석 기법과 선택 이유</h3>
+  <div class="method">
+    <div class="card"><h3>EDA · 기술통계</h3><p>후보 규모, 동시 등장, 재진입 분포 파악</p></div>
+    <div class="card"><h3>Spearman 상관분석</h3><p>소표본, 정규성 가정이 어려워 순위 기반으로 탐색</p></div>
+    <div class="card"><h3>단순 선형회귀</h3><p>공개 간격이 시청 비중을 얼마나 설명하는지 확인</p></div>
+    <div class="card"><h3>Baseline 비교</h3><p>단순 평균 예측보다 실제로 나은지 판단</p></div>
+    <div class="card"><h3>LOOCV</h3><p>유효 표본이 14건이라 한 건씩 교차 검증</p></div>
+    <div class="card"><h3>Mann–Whitney U</h3><p>영어·비영어 히트 사례의 분포를 탐색적으로 비교</p></div>
+  </div>
+  <div class="samples">
+    <div class="card"><div class="big">21</div><p>히트 10 · 비히트 11</p></div>
+    <div class="card"><div class="big">14</div><p>유효 공개 간격</p></div>
+    <div class="card"><div class="big">12</div><p>재진입 사례만</p></div>
+    <div class="card"><div class="big">2</div><p>비영어 히트</p></div>
+  </div>
+
+  <div class="note key"><b>왜 중요한가</b><span>“공개 간격이 짧을수록 유입이 크다”는 직관이 데이터로 확인되는지가 프로모션 규모 결정의 핵심 근거가 됩니다.</span></div>
+  <h3 class="sub-h">공개 간격 ↔ 이전 시즌 시청 비중 <small>양의 방향이나 통계적으로 무의미</small></h3>
+  <div class="mini">
+    <div class="card chart">
+      <h3>Spearman ρ</h3><p class="cap">ρ가 클수록 양의 상관 · 유의하지 않아 방향만 참고</p>
+      <div class="rows">
+        <div class="rw c-b"><span>전체 유효 간격<br><small>n=14</small></span><div class="track"><i style="--v:38.28%"></i></div><span class="v">0.3828</span></div>
+        <div class="rw c-b"><span>재진입 사례만<br><small>n=12</small></span><div class="track"><i style="--v:51.05%"></i></div><span class="v">0.5105</span></div>
+        <div class="rw c-b"><span>Money Heist 제외<br><small>n=11</small></span><div class="track"><i style="--v:55.45%"></i></div><span class="v">0.5545</span></div>
+      </div>
+      <div class="axis"><span></span><div><span>0</span><span>0.5</span><span>1.0</span></div><span></span></div>
+      <div class="ps"><span>p = 0.1767</span><span>p = 0.0899</span><span>p = 0.0767</span><span>모두 p &gt; 0.05</span></div>
+    </div>
+    <div class="card chart">
+      <h3>예상과 반대로 나왔습니다</h3>
+      <div class="exp" style="grid-template-columns:1fr;margin-top:14px">
+        <div><b>예상</b>공개 간격이 짧을수록 이전 시즌 동반 유입이 클 것</div>
+        <div><b>관찰</b>오히려 간격이 길수록 prior_share가 높아지는 양의 방향</div>
+        <div><b>판단</b>p &gt; 0.05, 표본이 작아 통계적 확정·일반화 불가</div>
+      </div>
+      <p>공개 간격은 공개일이 확실한 14건만 사용했습니다. 날짜가 불확실하거나 없는 사례는 제외했습니다.</p>
+    </div>
+  </div>
+
+  <div class="note warn"><b>해석 범위</b><span>언어권 비교는 비영어 히트 2건 기준의 탐색 결과입니다. 지역별 고정 전략의 근거로 쓰지 않고, 표본을 늘려 다시 확인할 신호로만 봅니다.</span></div>
+  <div class="mini" style="margin-top:12px">
+    <div class="card chart">
+      <h3>영어 vs 비영어 히트 · 중앙값 비교</h3><p class="cap">영어 n=8, 비영어 n=2 · Mann–Whitney U</p>
+      <div class="rows">
+        <div class="pair"><div class="rw c-a"><span>inflow_ratio</span><div class="track thin"><i style="--v:21.3%"></i></div><span class="v">17.04%</span></div><div class="rw c-b"><span></span><div class="track thin"><i style="--v:28.1%"></i></div><span class="v">22.46%</span></div></div>
+        <div class="pair"><div class="rw c-a"><span>prior_share</span><div class="track thin"><i style="--v:18.2%"></i></div><span class="v">14.56%</span></div><div class="rw c-b"><span></span><div class="track thin"><i style="--v:22.9%"></i></div><span class="v">18.34%</span></div></div>
+        <div class="pair"><div class="rw c-a"><span>country_ratio</span><div class="track thin"><i style="--v:28%"></i></div><span class="v">22.39%</span></div><div class="rw c-b"><span></span><div class="track thin"><i style="--v:86.7%"></i></div><span class="v">69.32%</span></div></div>
+      </div>
+      <div class="lg"><span><i style="background:var(--muted)"></i>영어 히트</span><span><i style="background:var(--accent)"></i>비영어 히트</span><span>p = 0.4000 · 0.4000 · 0.2667</span></div>
+    </div>
+    <div class="card chart">
+      <h3>확정 아닌 신호</h3>
+      <p>비영어 히트는 세 지표의 중앙값이 모두 더 높았고, 국가 재진입 비율은 46.93%p 차이가 났습니다. 그러나 모든 p &gt; 0.05이고 비영어 표본이 2건뿐이라 언어권 차이의 통계적 근거는 없습니다.</p>
+      <div class="note info"><b>해석</b><span>추가로 확인해 볼 신호로만 사용합니다. 글로벌 콘텐츠 전체의 특성으로 단정하지 않습니다.</span></div>
+    </div>
+  </div>
+
+  <div class="note key"><b>왜 중요한가</b><span>공개 간격만으로 이전 시즌 유입을 예측하는 모델은 평균 예측보다도 못했습니다. 그래서 간격 기반 예측을 운영 의사결정에 쓰지 않기로 했습니다.</span></div>
+  <h3 class="sub-h">단순 회귀 <small>기준 모델(평균 예측)보다 낮은 성능</small></h3>
+  <div class="mini">
+    <div class="card chart">
+      <h3>LOOCV 오차 비교</h3><p class="cap">낮을수록 좋음 · 두 지표 모두 평균 예측이 근소하게 우세</p>
+      <div class="rows">
+        <div class="pair"><div class="rw c-pos"><span>MAE · 평균 예측</span><div class="track thin"><i style="--v:67.4%"></i></div><span class="v">0.0809</span></div><div class="rw c-b"><span>MAE · 회귀</span><div class="track thin"><i style="--v:70.8%"></i></div><span class="v">0.0850</span></div></div>
+        <div class="pair"><div class="rw c-pos"><span>RMSE · 평균 예측</span><div class="track thin"><i style="--v:83.7%"></i></div><span class="v">0.1004</span></div><div class="rw c-b"><span>RMSE · 회귀</span><div class="track thin"><i style="--v:85.5%"></i></div><span class="v">0.1026</span></div></div>
+      </div>
+      <div class="lg"><span><i style="background:var(--pos)"></i>Baseline (평균 예측)</span><span><i style="background:var(--accent)"></i>단순 선형회귀</span></div>
+    </div>
+    <div class="card chart">
+      <h3>공개 간격이 설명하는 변동</h3>
+      <div class="big" style="font-size:44px">R² 6.7%</div>
+      <div class="track" style="margin-top:12px"><i style="--v:6.7%"></i></div>
+      <div class="ps"><span>회귀계수 0.000154</span><span>절편 0.08325</span></div>
+      <p>회귀계수가 양수라는 이유만으로 “간격이 길수록 효과가 크다”고 결론 내릴 수 없습니다.</p>
+    </div>
+  </div>
+
+  <h3 class="sub-h" id="hyp">가설 검증 <small>확인된 것은 동반 등장(H4)뿐</small></h3>
+  <div class="hyp">
+    <div class="h-row"><span class="id">H1</span><span class="t">공개 간격이 짧을수록 이전 시즌 동반 유입이 클 것</span><span class="r">ρ=0.5105, p=0.0899 (n=12) · 예상과 반대 방향</span><span class="pill neg">지지되지 않음</span></div>
+    <div class="h-row"><span class="id">H1-1</span><span class="t">공개 간격이 시청 비중 설명에 도움이 될 것</span><span class="r">MAE·RMSE가 기준 모델보다 높음 · R²=6.7%</span><span class="pill neg">지지되지 않음</span></div>
+    <div class="h-row"><span class="id">H2</span><span class="t">히트 시즌일수록 이전 시즌 동반 진입이 많을 것</span><span class="r">히트 10/10 (100%) vs 비히트 7/11 (63.6%)</span><span class="pill hold">판단 보류</span></div>
+    <div class="h-row"><span class="id">H3</span><span class="t">비영어 히트가 영어 히트보다 국가별 동반 진입 범위가 넓을 것</span><span class="r">중앙값 차이만 관찰 · p=0.2667, 비영어 n=2</span><span class="pill hold">판단 보류</span></div>
+    <div class="h-row pos"><span class="id">H4</span><span class="t">신규 시즌 첫 TOP 10 주에 이전 시즌 동시 등장·재진입이 관찰될 것</span><span class="r">462건 중 373건 동시 등장 · 후보 단위 재진입 308건</span><span class="pill pos">관찰됨</span></div>
+  </div>
+  <div class="meme">
+    <div><small>기대</small><strong class="go">GO</strong><p>공개 간격이 짧을수록 이전 시즌 유입 ↑</p></div>
+    <div><small>현실</small><strong class="q2">ρ = +0.51</strong><p>오히려 간격이 길수록 ↑ (예상과 반대)</p></div>
+    <div><small>판정</small><strong class="stop">STOP</strong><p>p = 0.0899 &gt; 0.05, 멈춰! 일반화하면 탈락입니다</p></div>
+  </div>
+  <p class="meme-cap">“무궁화 꽃이 피었습니다 — p &gt; 0.05에서 움직이면 탈락입니다”</p>
+</section><section class="ch wrap" id="more">
+  <div class="ch-head"><div><span class="tag">04 · NEXT</span><h2>이어서 보기</h2></div><p>전략 제안, 분석 과정 기록, 전체 보고서는 별도 페이지에서 확인할 수 있습니다.</p></div>
+  <div class="links">
+    <a class="lk" href="insight.html"><span class="k">BUSINESS INSIGHT</span><h3>전략 제안</h3><p>운영 관찰 지표 3가지, 실행 제안 4가지와 측정 KPI, 조직별 역할</p><span class="go">전략 제안 보기 →</span></a>
+    <a class="lk" href="archive.html"><span class="k">ARCHIVE</span><h3>분석 과정 기록</h3><p>분석 중 바로잡은 6가지, 분석의 한계, 다음 단계, 프로젝트 일정</p><span class="go">과정 기록 보기 →</span></a>
+    <a class="lk" href="report.html"><span class="k">FULL REPORT</span><h3>전체 보고서</h3><p>문제 인식부터 데이터 출처까지 12개 장을 목차로 바로 이동하며 읽기</p><span class="go">보고서 읽기 →</span></a>
+  </div>
+</section>
 </main>
-
-<script id="dash-data" type="application/json">{"total":2749105,"ind_total":[["음식",831832],["소매",642791],["수리·개인",328104],["과학·기술",291073],["교육",180951],["시설관리·임대",119016],["예술·스포츠",114407],["부동산",104772],["숙박",78907],["보건의료",57252]],"reg_total":[["경기도",666817],["서울특별시",550202],["전남광주통합특별시",173925],["경상남도",171361],["부산광역시",158510],["경상북도",143588],["인천광역시",135679],["충청남도",123367],["대구광역시",117401],["강원특별자치도",109064],["전북특별자치도",97941],["충청북도",92814],["대전광역시",80062],["제주특별자치도",58437],["울산광역시",54286],["세종특별자치시",15651]],"food_total":[["백반/한정식",178855],["카페",121360],["요리 주점",55508],["돼지고기 구이/찜",54949],["김밥/만두/분식",44000],["치킨",39805],["국/탕/찌개류",31655],["빵/도넛",30960],["중국집",27337],["일반 유흥 주점",24788],["국수/칼국수",20303],["경양식",19417],["일식 회/초밥",19361],["횟집",19218],["피자",17354],["생맥주 전문",14889],["해산물 구이/찜",14430],["떡/한과",9378],["닭/오리고기 구이/찜",8559],["그 외 기타 간이 음식점",8078],["족발/보쌈",7515],["구내식당",7430],["곱창 전골/구이",7137],["소고기 구이/찜",6090],["베트남식 전문",6036],["버거",5677],["마라탕/훠궈",4329],["냉면/밀면",3853],["토스트/샌드위치/샐러드",3359],["뷔페",3144],["아이스크림/빙수",2798],["일식 카레/돈가스/덮밥",2496],["기타 한식 음식점",2469],["일식 면 요리",2283],["파스타/스테이크",2016],["기타 서양식 음식점",1049],["무도 유흥 주점",962],["전/부침개",905],["복 요리 전문",587],["기타 동남아식 전문",530],["기타 일식 음식점",507],["패밀리레스토랑",407],["분류 안된 외국식 음식점",49]],"by_reg":{"강원특별자치도":{"total":109064,"ind":[["음식",37292],["소매",26219],["수리·개인",11772],["숙박",8758],["과학·기술",6130],["교육",6119],["시설관리·임대",4344],["예술·스포츠",4204],["부동산",2432],["보건의료",1794]],"gu":[["원주시",22599],["춘천시",17829],["강릉시",16569],["속초시",7271],["동해시",5915],["홍천군",4887],["삼척시",4217],["평창군",3791],["양양군",3113],["횡성군",3042],["정선군",2988],["인제군",2874],["철원군",2863],["영월군",2786],["태백시",2675],["고성군",2592],["화천군",1626],["양구군",1427]],"food":[["백반/한정식",8865],["카페",5122],["돼지고기 구이/찜",2649],["요리 주점",2568],["치킨",1684],["김밥/만두/분식",1658],["국/탕/찌개류",1531],["국수/칼국수",1372],["횟집",1346],["중국집",1155],["일반 유흥 주점",1148],["빵/도넛",1147],["닭/오리고기 구이/찜",698],["경양식",683],["해산물 구이/찜",675],["피자",657],["그 외 기타 간이 음식점",516],["일식 회/초밥",492],["생맥주 전문",409],["소고기 구이/찜",373],["떡/한과",365],["족발/보쌈",314],["곱창 전골/구이",217],["버거",201],["냉면/밀면",170],["기타 한식 음식점",170],["구내식당",169],["베트남식 전문",148],["토스트/샌드위치/샐러드",115],["마라탕/훠궈",114],["뷔페",105],["아이스크림/빙수",88],["일식 면 요리",73],["파스타/스테이크",63],["전/부침개",61],["일식 카레/돈가스/덮밥",49],["무도 유흥 주점",47],["기타 서양식 음식점",30],["기타 동남아식 전문",18],["패밀리레스토랑",12],["기타 일식 음식점",9],["복 요리 전문",6]]},"경기도":{"total":666817,"ind":[["음식",184030],["소매",148450],["수리·개인",80489],["과학·기술",79474],["교육",55684],["예술·스포츠",30266],["시설관리·임대",30175],["부동산",29971],["보건의료",17386],["숙박",10892]],"gu":[["남양주시",33338],["평택시",32812],["김포시",24926],["시흥시",24912],["파주시",24402],["성남시 분당구",24020],["부천시 원미구",23105],["고양시 덕양구",21199],["안산시 단원구",20990],["의정부시",20711],["용인시 기흥구",18495],["화성시 동탄구",18077],["안양시 동안구",17559],["고양시 일산동구",17403],["수원시 영통구",16935],["하남시",16799],["광주시",16577],["화성시 만세구",14978],["용인시 처인구",14814],["수원시 팔달구",14635],["수원시 권선구",14621],["안산시 상록구",13219],["양주시",12728],["용인시 수지구",12613],["광명시",12444],["이천시",12228],["성남시 수정구",11677],["고양시 일산서구",11524],["오산시",11311],["구리시",11298],["수원시 장안구",10846],["안성시",10719],["안양시 만안구",10417],["포천시",10313],["성남시 중원구",10266],["군포시",10145],["부천시 소사구",8531],["양평군",7999],["여주시",6950],["가평군",6490],["화성시 병점구",6330],["화성시 효행구",6286],["부천시 오정구",5805],["의왕시",5207],["동두천시",4578],["과천시",2917],["연천군",2668]],"food":[["백반/한정식",36157],["카페",26801],["돼지고기 구이/찜",11902],["요리 주점",10650],["김밥/만두/분식",10392],["치킨",9449],["국/탕/찌개류",8061],["빵/도넛",7414],["중국집",6427],["일반 유흥 주점",5028],["일식 회/초밥",4421],["피자",4341],["국수/칼국수",4296],["경양식",4071],["생맥주 전문",3664],["해산물 구이/찜",3556],["횟집",2843],["닭/오리고기 구이/찜",2093],["구내식당",1936],["족발/보쌈",1888],["떡/한과",1791],["그 외 기타 간이 음식점",1739],["곱창 전골/구이",1669],["베트남식 전문",1642],["버거",1488],["뷔페",1479],["소고기 구이/찜",1388],["마라탕/훠궈",1324],["일식 카레/돈가스/덮밥",830],["토스트/샌드위치/샐러드",807],["냉면/밀면",806],["아이스크림/빙수",792],["기타 한식 음식점",584],["일식 면 요리",584],["파스타/스테이크",525],["기타 서양식 음식점",273],["전/부침개",234],["무도 유흥 주점",213],["기타 동남아식 전문",187],["기타 일식 음식점",107],["패밀리레스토랑",90],["복 요리 전문",79],["분류 안된 외국식 음식점",9]]},"경상남도":{"total":171361,"ind":[["음식",62775],["소매",41933],["수리·개인",22225],["과학·기술",10310],["교육",7904],["숙박",6738],["예술·스포츠",6485],["시설관리·임대",6068],["부동산",5497],["보건의료",1426]],"gu":[["김해시",26465],["진주시",19431],["양산시",16656],["창원시 성산구",13487],["거제시",12533],["창원시 의창구",11118],["창원시 마산합포구",9997],["창원시 진해구",8375],["창원시 마산회원구",8196],["통영시",7475],["사천시",6416],["밀양시",5768],["거창군",3339],["남해군",3279],["창녕군",3148],["함안군",2942],["하동군",2865],["고성군",2653],["함양군",2137],["산청군",2025],["합천군",1979],["의령군",1077]],"food":[["백반/한정식",14329],["카페",8281],["돼지고기 구이/찜",4629],["요리 주점",3971],["일반 유흥 주점",3625],["치킨",3128],["김밥/만두/분식",2978],["횟집",2461],["국/탕/찌개류",2293],["빵/도넛",2025],["중국집",1857],["국수/칼국수",1561],["해산물 구이/찜",1255],["피자",1107],["경양식",1005],["일식 회/초밥",902],["떡/한과",771],["생맥주 전문",692],["구내식당",668],["그 외 기타 간이 음식점",624],["닭/오리고기 구이/찜",539],["족발/보쌈",520],["곱창 전골/구이",421],["냉면/밀면",418],["소고기 구이/찜",414],["베트남식 전문",369],["버거",358],["토스트/샌드위치/샐러드",213],["마라탕/훠궈",207],["아이스크림/빙수",174],["뷔페",163],["일식 면 요리",139],["기타 한식 음식점",129],["일식 카레/돈가스/덮밥",102],["파스타/스테이크",100],["무도 유흥 주점",96],["복 요리 전문",88],["기타 일식 음식점",52],["기타 서양식 음식점",37],["전/부침개",34],["기타 동남아식 전문",20],["패밀리레스토랑",18],["분류 안된 외국식 음식점",2]]},"경상북도":{"total":143588,"ind":[["음식",51669],["소매",37506],["수리·개인",18225],["과학·기술",8035],["숙박",6807],["교육",5767],["예술·스포츠",5532],["시설관리·임대",5397],["부동산",3707],["보건의료",943]],"gu":[["구미시",20628],["경주시",17818],["포항시 북구",15023],["포항시 남구",13266],["경산시",13104],["안동시",9391],["김천시",6579],["영주시",6189],["칠곡군",6094],["영천시",4892],["상주시",4718],["문경시",4278],["울진군",3218],["영덕군",2796],["청도군",2519],["예천군",2367],["의성군",2302],["성주군",2239],["청송군",1517],["고령군",1501],["봉화군",1501],["울릉군",917],["영양군",731]],"food":[["백반/한정식",12897],["카페",7458],["돼지고기 구이/찜",3897],["요리 주점",3132],["치킨",2598],["김밥/만두/분식",2441],["국/탕/찌개류",1815],["중국집",1760],["빵/도넛",1628],["일반 유흥 주점",1556],["횟집",1438],["국수/칼국수",1433],["해산물 구이/찜",980],["피자",819],["떡/한과",769],["경양식",734],["일식 회/초밥",690],["닭/오리고기 구이/찜",685],["곱창 전골/구이",625],["구내식당",494],["생맥주 전문",482],["그 외 기타 간이 음식점",478],["족발/보쌈",437],["소고기 구이/찜",417],["냉면/밀면",280],["버거",264],["베트남식 전문",239],["마라탕/훠궈",174],["기타 한식 음식점",170],["토스트/샌드위치/샐러드",139],["아이스크림/빙수",134],["뷔페",132],["복 요리 전문",80],["일식 면 요리",72],["일식 카레/돈가스/덮밥",70],["파스타/스테이크",68],["무도 유흥 주점",58],["전/부침개",40],["패밀리레스토랑",28],["기타 일식 음식점",22],["기타 동남아식 전문",20],["기타 서양식 음식점",16]]},"대구광역시":{"total":117401,"ind":[["음식",37610],["소매",30242],["수리·개인",16305],["과학·기술",10133],["교육",6970],["예술·스포츠",5025],["시설관리·임대",4325],["부동산",4147],["보건의료",1524],["숙박",1120]],"gu":[["달서구",22569],["수성구",19776],["북구",17910],["동구",15275],["중구",14996],["달성군",9238],["남구",8360],["서구",8151],["군위군",1126]],"food":[["백반/한정식",8082],["카페",5449],["요리 주점",2734],["돼지고기 구이/찜",2674],["김밥/만두/분식",2110],["치킨",1881],["빵/도넛",1498],["중국집",1183],["일반 유흥 주점",1133],["국수/칼국수",1087],["국/탕/찌개류",1086],["일식 회/초밥",857],["경양식",813],["횟집",782],["피자",766],["해산물 구이/찜",507],["생맥주 전문",500],["곱창 전골/구이",492],["떡/한과",482],["닭/오리고기 구이/찜",446],["구내식당",388],["그 외 기타 간이 음식점",357],["족발/보쌈",331],["소고기 구이/찜",265],["버거",260],["베트남식 전문",236],["마라탕/훠궈",155],["냉면/밀면",146],["토스트/샌드위치/샐러드",130],["아이스크림/빙수",126],["파스타/스테이크",99],["기타 한식 음식점",88],["뷔페",80],["일식 카레/돈가스/덮밥",71],["일식 면 요리",68],["복 요리 전문",63],["무도 유흥 주점",61],["기타 서양식 음식점",37],["패밀리레스토랑",26],["기타 일식 음식점",25],["전/부침개",21],["기타 동남아식 전문",14],["분류 안된 외국식 음식점",1]]},"대전광역시":{"total":80062,"ind":[["음식",23627],["소매",20069],["수리·개인",10918],["과학·기술",7368],["교육",5380],["예술·스포츠",3618],["시설관리·임대",3484],["부동산",2783],["보건의료",1935],["숙박",880]],"gu":[["서구",27541],["유성구",18985],["중구",13373],["동구",11738],["대덕구",8425]],"food":[["백반/한정식",5053],["카페",3809],["돼지고기 구이/찜",1699],["요리 주점",1398],["김밥/만두/분식",1394],["치킨",1193],["국/탕/찌개류",888],["빵/도넛",876],["국수/칼국수",755],["중국집",721],["일식 회/초밥",621],["경양식",558],["피자",531],["생맥주 전문",440],["횟집",402],["해산물 구이/찜",348],["떡/한과",266],["일반 유흥 주점",264],["닭/오리고기 구이/찜",226],["소고기 구이/찜",210],["족발/보쌈",207],["곱창 전골/구이",192],["버거",191],["그 외 기타 간이 음식점",173],["구내식당",163],["베트남식 전문",141],["마라탕/훠궈",134],["토스트/샌드위치/샐러드",113],["냉면/밀면",97],["일식 면 요리",78],["기타 한식 음식점",77],["아이스크림/빙수",77],["일식 카레/돈가스/덮밥",73],["파스타/스테이크",70],["뷔페",56],["기타 서양식 음식점",39],["전/부침개",23],["복 요리 전문",19],["무도 유흥 주점",18],["패밀리레스토랑",13],["기타 동남아식 전문",12],["기타 일식 음식점",9]]},"부산광역시":{"total":158510,"ind":[["음식",53273],["소매",38592],["수리·개인",21006],["과학·기술",13952],["교육",7967],["시설관리·임대",6189],["예술·스포츠",6049],["부동산",6017],["숙박",3129],["보건의료",2336]],"gu":[["부산진구",20862],["해운대구",17596],["동래구",11923],["사하구",10793],["금정구",10255],["연제구",10247],["수영구",10134],["사상구",9527],["남구",9475],["기장군",8665],["북구",8607],["강서구",8082],["중구",7408],["동구",6877],["영도구",4081],["서구",3978]],"food":[["백반/한정식",10564],["카페",7255],["요리 주점",4390],["돼지고기 구이/찜",3547],["김밥/만두/분식",2706],["치킨",2534],["일반 유흥 주점",2392],["빵/도넛",1964],["횟집",1956],["중국집",1735],["국/탕/찌개류",1511],["경양식",1344],["일식 회/초밥",1331],["국수/칼국수",1314],["해산물 구이/찜",1045],["피자",1041],["생맥주 전문",871],["떡/한과",601],["구내식당",515],["족발/보쌈",501],["그 외 기타 간이 음식점",494],["곱창 전골/구이",478],["냉면/밀면",406],["닭/오리고기 구이/찜",404],["버거",352],["소고기 구이/찜",297],["베트남식 전문",294],["마라탕/훠궈",202],["토스트/샌드위치/샐러드",200],["일식 카레/돈가스/덮밥",192],["아이스크림/빙수",176],["일식 면 요리",140],["뷔페",93],["파스타/스테이크",90],["기타 일식 음식점",61],["기타 한식 음식점",61],["무도 유흥 주점",47],["전/부침개",44],["기타 서양식 음식점",39],["복 요리 전문",29],["기타 동남아식 전문",29],["패밀리레스토랑",27],["분류 안된 외국식 음식점",1]]},"서울특별시":{"total":550202,"ind":[["음식",140019],["소매",110400],["과학·기술",99983],["수리·개인",53424],["교육",43995],["시설관리·임대",26098],["부동산",24536],["예술·스포츠",20837],["보건의료",18639],["숙박",12271]],"gu":[["강남구",65766],["서초구",39788],["송파구",34605],["마포구",31932],["영등포구",29231],["강서구",26901],["중구",24655],["종로구",21484],["관악구",20192],["강동구",19613],["광진구",18759],["구로구",18417],["금천구",18222],["성동구",17706],["동대문구",17160],["은평구",16264],["용산구",16230],["양천구",15911],["성북구",15763],["노원구",15551],["중랑구",14965],["서대문구",14077],["동작구",14009],["강북구",12527],["도봉구",10474]],"food":[["백반/한정식",26197],["카페",22578],["요리 주점",10660],["김밥/만두/분식",8032],["돼지고기 구이/찜",7796],["빵/도넛",6081],["일식 회/초밥",5953],["경양식",5903],["치킨",5481],["국/탕/찌개류",4758],["중국집",4683],["피자",3412],["국수/칼국수",2916],["생맥주 전문",2871],["일반 유흥 주점",2358],["횟집",1976],["해산물 구이/찜",1746],["베트남식 전문",1608],["그 외 기타 간이 음식점",1415],["곱창 전골/구이",1332],["닭/오리고기 구이/찜",1239],["족발/보쌈",1188],["떡/한과",1061],["버거",1042],["소고기 구이/찜",905],["구내식당",895],["마라탕/훠궈",796],["토스트/샌드위치/샐러드",795],["냉면/밀면",634],["일식 면 요리",597],["일식 카레/돈가스/덮밥",542],["아이스크림/빙수",523],["파스타/스테이크",515],["기타 서양식 음식점",347],["기타 한식 음식점",276],["전/부침개",185],["뷔페",166],["기타 일식 음식점",131],["기타 동남아식 전문",129],["무도 유흥 주점",97],["패밀리레스토랑",89],["복 요리 전문",75],["분류 안된 외국식 음식점",36]]},"세종특별자치시":{"total":15651,"ind":[["음식",4959],["소매",3045],["수리·개인",1628],["교육",1610],["과학·기술",1483],["부동산",1098],["예술·스포츠",753],["시설관리·임대",719],["보건의료",234],["숙박",122]],"gu":[["세종특별자치시",15651]],"food":[["백반/한정식",998],["카페",846],["김밥/만두/분식",278],["치킨",277],["돼지고기 구이/찜",274],["빵/도넛",236],["국/탕/찌개류",236],["요리 주점",185],["중국집",179],["국수/칼국수",139],["피자",134],["경양식",128],["일식 회/초밥",125],["해산물 구이/찜",84],["생맥주 전문",69],["닭/오리고기 구이/찜",63],["횟집",58],["버거",55],["족발/보쌈",52],["곱창 전골/구이",50],["그 외 기타 간이 음식점",48],["일반 유흥 주점",47],["베트남식 전문",45],["소고기 구이/찜",40],["구내식당",39],["토스트/샌드위치/샐러드",35],["떡/한과",35],["마라탕/훠궈",35],["아이스크림/빙수",29],["일식 카레/돈가스/덮밥",26],["냉면/밀면",20],["일식 면 요리",18],["뷔페",16],["기타 한식 음식점",16],["파스타/스테이크",15],["기타 동남아식 전문",7],["전/부침개",7],["복 요리 전문",5],["패밀리레스토랑",3],["기타 일식 음식점",3],["기타 서양식 음식점",3],["무도 유흥 주점",1]]},"울산광역시":{"total":54286,"ind":[["음식",19521],["소매",12491],["수리·개인",7635],["과학·기술",3558],["교육",3012],["예술·스포츠",2523],["시설관리·임대",2112],["부동산",1867],["숙박",1053],["보건의료",514]],"gu":[["남구",20089],["울주군",10411],["중구",9631],["북구",7940],["동구",6215]],"food":[["백반/한정식",4368],["카페",2533],["돼지고기 구이/찜",1584],["요리 주점",1347],["치킨",1037],["김밥/만두/분식",925],["일반 유흥 주점",913],["국/탕/찌개류",701],["빵/도넛",643],["횟집",585],["중국집",557],["국수/칼국수",492],["해산물 구이/찜",362],["경양식",359],["일식 회/초밥",355],["피자",344],["생맥주 전문",289],["떡/한과",222],["닭/오리고기 구이/찜",192],["그 외 기타 간이 음식점",186],["족발/보쌈",185],["곱창 전골/구이",163],["구내식당",162],["소고기 구이/찜",142],["버거",135],["냉면/밀면",122],["마라탕/훠궈",91],["베트남식 전문",82],["토스트/샌드위치/샐러드",73],["아이스크림/빙수",49],["일식 면 요리",49],["기타 한식 음식점",42],["뷔페",42],["무도 유흥 주점",40],["일식 카레/돈가스/덮밥",40],["파스타/스테이크",32],["복 요리 전문",21],["기타 일식 음식점",17],["전/부침개",14],["패밀리레스토랑",11],["기타 서양식 음식점",11],["기타 동남아식 전문",4]]},"인천광역시":{"total":135679,"ind":[["음식",40550],["소매",31194],["수리·개인",17047],["과학·기술",12170],["교육",9632],["예술·스포츠",6874],["시설관리·임대",5663],["부동산",5525],["보건의료",3691],["숙박",3333]],"gu":[["남동구",22810],["부평구",20935],["미추홀구",18724],["서해구",17442],["연수구",16873],["계양구",10990],["검단구",7459],["제물포구",7034],["영종구",6270],["강화군",5345],["옹진군",1797]],"food":[["백반/한정식",8175],["카페",5712],["요리 주점",2865],["돼지고기 구이/찜",2475],["김밥/만두/분식",2347],["치킨",2065],["국/탕/찌개류",1762],["빵/도넛",1510],["중국집",1382],["일반 유흥 주점",988],["국수/칼국수",961],["횟집",932],["일식 회/초밥",879],["피자",875],["생맥주 전문",874],["해산물 구이/찜",859],["경양식",698],["구내식당",603],["닭/오리고기 구이/찜",416],["족발/보쌈",415],["그 외 기타 간이 음식점",397],["떡/한과",360],["곱창 전골/구이",359],["마라탕/훠궈",321],["베트남식 전문",311],["버거",298],["소고기 구이/찜",270],["뷔페",203],["토스트/샌드위치/샐러드",173],["아이스크림/빙수",163],["일식 카레/돈가스/덮밥",162],["냉면/밀면",141],["파스타/스테이크",128],["기타 한식 음식점",115],["일식 면 요리",88],["기타 서양식 음식점",82],["전/부침개",66],["무도 유흥 주점",53],["기타 동남아식 전문",26],["패밀리레스토랑",19],["복 요리 전문",12],["기타 일식 음식점",10]]},"전남광주통합특별시":{"total":173925,"ind":[["음식",55412],["소매",45930],["수리·개인",23381],["과학·기술",13590],["교육",7852],["시설관리·임대",7365],["예술·스포츠",7060],["숙박",5773],["부동산",5769],["보건의료",1793]],"gu":[["북구",20413],["광산구",18681],["서구",17367],["여수시",16289],["순천시",15004],["목포시",13292],["동구",9319],["남구",8900],["광양시",7892],["나주시",6279],["무안군",4571],["해남군",3522],["고흥군",3134],["화순군",2861],["완도군",2793],["영광군",2739],["영암군",2668],["담양군",2666],["장성군",2027],["보성군",1984],["장흥군",1938],["강진군",1933],["구례군",1715],["신안군",1668],["진도군",1629],["곡성군",1333],["함평군",1308]],"food":[["백반/한정식",13461],["카페",8271],["요리 주점",4345],["돼지고기 구이/찜",3635],["김밥/만두/분식",2671],["치킨",2649],["국/탕/찌개류",2239],["일반 유흥 주점",1869],["빵/도넛",1792],["횟집",1596],["생맥주 전문",1529],["중국집",1491],["피자",1032],["해산물 구이/찜",1005],["떡/한과",933],["경양식",813],["일식 회/초밥",771],["국수/칼국수",658],["닭/오리고기 구이/찜",475],["족발/보쌈",471],["그 외 기타 간이 음식점",448],["구내식당",397],["소고기 구이/찜",394],["버거",333],["곱창 전골/구이",289],["베트남식 전문",251],["마라탕/훠궈",220],["토스트/샌드위치/샐러드",190],["기타 한식 음식점",182],["아이스크림/빙수",149],["냉면/밀면",143],["뷔페",107],["일식 카레/돈가스/덮밥",101],["무도 유흥 주점",99],["일식 면 요리",90],["파스타/스테이크",86],["전/부침개",78],["기타 서양식 음식점",50],["복 요리 전문",43],["기타 일식 음식점",20],["패밀리레스토랑",19],["기타 동남아식 전문",17]]},"전북특별자치도":{"total":97941,"ind":[["음식",30665],["소매",28178],["수리·개인",12630],["과학·기술",6847],["교육",4548],["시설관리·임대",4050],["예술·스포츠",3960],["숙박",3177],["부동산",3012],["보건의료",874]],"gu":[["전주시 완산구",21054],["전주시 덕진구",16768],["군산시",14941],["익산시",13899],["정읍시",5345],["완주군",5040],["남원시",4660],["김제시",3994],["부안군",3187],["고창군",2656],["무주군",1710],["순창군",1265],["진안군",1230],["임실군",1205],["장수군",987]],"food":[["백반/한정식",7656],["카페",4826],["돼지고기 구이/찜",1804],["요리 주점",1794],["김밥/만두/분식",1570],["치킨",1523],["국/탕/찌개류",1136],["빵/도넛",1097],["중국집",1093],["일반 유흥 주점",777],["국수/칼국수",716],["생맥주 전문",658],["횟집",657],["피자",598],["경양식",569],["떡/한과",563],["해산물 구이/찜",529],["일식 회/초밥",465],["그 외 기타 간이 음식점",304],["족발/보쌈",279],["소고기 구이/찜",257],["구내식당",216],["닭/오리고기 구이/찜",194],["버거",166],["곱창 전골/구이",146],["베트남식 전문",133],["냉면/밀면",127],["마라탕/훠궈",121],["기타 한식 음식점",102],["일식 면 요리",97],["토스트/샌드위치/샐러드",88],["뷔페",88],["아이스크림/빙수",82],["일식 카레/돈가스/덮밥",63],["파스타/스테이크",38],["무도 유흥 주점",37],["전/부침개",26],["패밀리레스토랑",18],["기타 서양식 음식점",15],["복 요리 전문",15],["기타 일식 음식점",13],["기타 동남아식 전문",9]]},"제주특별자치도":{"total":58437,"ind":[["음식",19470],["소매",12226],["숙박",7441],["수리·개인",5086],["과학·기술",4196],["시설관리·임대",3192],["교육",2833],["예술·스포츠",1871],["부동산",1751],["보건의료",371]],"gu":[["제주시",41947],["서귀포시",16490]],"food":[["백반/한정식",4826],["카페",3008],["요리 주점",1519],["돼지고기 구이/찜",1498],["일반 유흥 주점",881],["김밥/만두/분식",817],["빵/도넛",762],["치킨",662],["경양식",635],["횟집",609],["국/탕/찌개류",544],["국수/칼국수",539],["중국집",479],["일식 회/초밥",426],["피자",381],["생맥주 전문",233],["해산물 구이/찜",201],["그 외 기타 간이 음식점",197],["떡/한과",142],["베트남식 전문",113],["닭/오리고기 구이/찜",109],["곱창 전골/구이",103],["버거",92],["소고기 구이/찜",91],["족발/보쌈",86],["구내식당",84],["마라탕/훠궈",68],["냉면/밀면",63],["파스타/스테이크",39],["토스트/샌드위치/샐러드",38],["아이스크림/빙수",37],["기타 한식 음식점",35],["뷔페",35],["일식 면 요리",32],["일식 카레/돈가스/덮밥",21],["기타 서양식 음식점",16],["복 요리 전문",14],["기타 동남아식 전문",10],["전/부침개",7],["패밀리레스토랑",6],["무도 유흥 주점",6],["기타 일식 음식점",6]]},"충청남도":{"total":123367,"ind":[["음식",40011],["소매",32636],["수리·개인",14797],["과학·기술",7965],["교육",6476],["시설관리·임대",5559],["예술·스포츠",5130],["숙박",4784],["부동산",3866],["보건의료",2143]],"gu":[["천안시 서북구",21916],["아산시",16669],["천안시 동남구",15023],["당진시",9817],["서산시",9352],["논산시",7161],["보령시",6861],["공주시",6802],["홍성군",6050],["태안군",5237],["예산군",4840],["금산군",3599],["부여군",3345],["서천군",3193],["계룡시",1793],["청양군",1709]],"food":[["백반/한정식",9776],["카페",5271],["돼지고기 구이/찜",2616],["요리 주점",2174],["치킨",2048],["김밥/만두/분식",1988],["국/탕/찌개류",1709],["중국집",1502],["빵/도넛",1297],["국수/칼국수",1163],["횟집",1104],["일반 유흥 주점",1088],["피자",771],["해산물 구이/찜",735],["생맥주 전문",715],["떡/한과",641],["경양식",610],["일식 회/초밥",597],["닭/오리고기 구이/찜",386],["그 외 기타 간이 음식점",376],["소고기 구이/찜",372],["구내식당",371],["곱창 전골/구이",361],["족발/보쌈",347],["버거",250],["베트남식 전문",234],["기타 한식 음식점",231],["마라탕/훠궈",214],["뷔페",211],["냉면/밀면",177],["토스트/샌드위치/샐러드",149],["아이스크림/빙수",108],["일식 카레/돈가스/덮밥",87],["파스타/스테이크",80],["일식 면 요리",79],["무도 유흥 주점",53],["전/부침개",29],["기타 서양식 음식점",24],["복 요리 전문",22],["패밀리레스토랑",19],["기타 동남아식 전문",17],["기타 일식 음식점",9]]},"충청북도":{"total":92814,"ind":[["음식",30949],["소매",23680],["수리·개인",11536],["과학·기술",5879],["교육",5202],["시설관리·임대",4276],["예술·스포츠",4220],["부동산",2794],["숙박",2629],["보건의료",1649]],"gu":[["청주시 흥덕구",15750],["충주시",13012],["청주시 상당구",10604],["청주시 서원구",9881],["청주시 청원구",9754],["제천시",8538],["음성군",6678],["진천군",4924],["옥천군",2848],["영동군",2548],["단양군",2189],["괴산군",2075],["증평군",2071],["보은군",1942]],"food":[["백반/한정식",7451],["카페",4140],["돼지고기 구이/찜",2270],["요리 주점",1776],["김밥/만두/분식",1693],["치킨",1596],["국/탕/찌개류",1385],["중국집",1133],["빵/도넛",990],["국수/칼국수",901],["일반 유흥 주점",721],["생맥주 전문",593],["피자",545],["해산물 구이/찜",543],["경양식",494],["일식 회/초밥",476],["횟집",473],["닭/오리고기 구이/찜",394],["떡/한과",376],["구내식당",330],["그 외 기타 간이 음식점",326],["족발/보쌈",294],["소고기 구이/찜",255],["곱창 전골/구이",240],["버거",192],["기타 한식 음식점",191],["베트남식 전문",190],["뷔페",168],["마라탕/훠궈",153],["냉면/밀면",103],["토스트/샌드위치/샐러드",101],["아이스크림/빙수",91],["일식 면 요리",79],["파스타/스테이크",68],["일식 카레/돈가스/덮밥",67],["전/부침개",36],["무도 유흥 주점",36],["기타 서양식 음식점",30],["복 요리 전문",16],["기타 일식 음식점",13],["기타 동남아식 전문",11],["패밀리레스토랑",9]]}},"n_ind":10,"n_reg":16}</script>
+<footer class="final">
+  <div class="wrap">
+    <div class="eyebrow"><b>핵심 한 문장</b></div>
+    <blockquote>신규 시즌 공개 시 이전 시즌의 TOP 10 <em>재진입은 관찰</em>되지만, 공개 간격만으로 규모를 <em>예측하기는 어려우므로</em>, 신규·이전 시즌을 함께 소개하고 국가별 실제 시청 결과로 효과를 검증해야 한다.</blockquote>
+    <div class="three">
+      <div><b class="o">관찰</b>후보 462건 중 373건(80.7%)에서 이전 시즌 동시 등장</div>
+      <div><b class="l">한계</b>공개 간격 R² 6.7% · 상관·회귀 모두 예측력 확정 불가</div>
+      <div><b class="s">제안</b>신규·이전 시즌을 함께 소개하고 국가별 시청 결과로 검증</div>
+    </div>
+    <div class="cta"><a class="btn" href="insight.html">Business Insight 보기</a><a class="btn ghost" href="report.html">Full Report 보기</a></div>
+    <div class="srcs" aria-label="데이터 출처">
+      <a href="https://www.netflix.com/tudum/top10" target="_blank" rel="noopener">Netflix Tudum TOP 10</a>
+      <a href="https://www.netflix.com/tudum/top10/data/all-weeks-global.tsv" target="_blank" rel="noopener">Global Weekly TSV</a>
+      <a href="https://www.netflix.com/tudum/top10/data/all-weeks-countries.tsv" target="_blank" rel="noopener">Country Weekly TSV</a>
+      <a href="https://developer.themoviedb.org/docs/getting-started" target="_blank" rel="noopener">TMDB API</a>
+      <a href="https://developer.themoviedb.org/reference/search-tv" target="_blank" rel="noopener">TV Search</a>
+      <a href="https://developer.themoviedb.org/reference/tv-series-details" target="_blank" rel="noopener">TV Series Details</a>
+      <a href="https://developer.themoviedb.org/reference/tv-season-details" target="_blank" rel="noopener">TV Season Details</a>
+    </div>
+    <p class="foot">본 프로젝트는 데이터 분석 학습과 포트폴리오 제작을 목적으로 진행한 개인 프로젝트이며, Netflix와는 공식적 관련이 없습니다.</p>
+  </div>
+</footer>
 <script>
-"use strict";
-const D = JSON.parse(document.getElementById("dash-data").textContent);
-const fmt = n => n.toLocaleString("ko-KR");
-const pct = (n, tot) => (n / tot * 100);
-const pf = (n, tot) => pct(n, tot).toFixed(1) + "%";
-const BLUE = "#4C72B0", ORANGE = "#dd8452";
-
-/* ---------- 통계 카드 ---------- */
 (function(){
-  const el = document.getElementById("stats");
-  const cards = [
-    [fmt(D.total), "전체 가게 수", "정리 후 총 보유 가게 (원본 2,772,484개)"],
-    [String(D.n_ind), "업종 수", "대분류 기준"],
-    [String(D.n_reg), "지역 수", "시·도 기준 (전남·광주는 원본에서 통합)"],
-  ];
-  el.innerHTML = cards.map(c =>
-    `<div class="card stat"><div class="num">${c[0]}</div><div class="lab">${c[1]}</div><div class="sub">${c[2]}</div></div>`).join("");
+  var links=[].slice.call(document.querySelectorAll('.chips a[data-s]'));
+  var ids=['overview','eda','modeling'];
+  var secs=ids.map(function(id){return document.getElementById(id)});
+  function spy(){
+    var y=window.scrollY+120,cur=null;
+    secs.forEach(function(s){if(s.offsetTop<=y)cur=s.id});
+    if(document.getElementById('more').offsetTop<=y)cur=null;
+    links.forEach(function(a){a.classList.toggle('on',a.dataset.s===cur)});
+  }
+  window.addEventListener('scroll',spy,{passive:true});spy();
 })();
-
-/* ---------- 지역 선택 메뉴 ---------- */
-const sel = document.getElementById("region");
-sel.add(new Option("전체 (16개 시·도)", "__ALL__"));
-D.reg_total.forEach(([name]) => sel.add(new Option(name, name)));
-sel.addEventListener("change", renderAll);
-
-/* ---------- SVG 차트 유틸 ---------- */
-const NS = "http://www.w3.org/2000/svg";
-function el(tag, attrs, text) {
-  const e = document.createElementNS(NS, tag);
-  for (const k in attrs) e.setAttribute(k, attrs[k]);
-  if (text != null) e.textContent = text;
-  return e;
-}
-function barChart(svg, rows, colors, vfmt) {
-  const W = 940, padL = 180, padR = 96, padT = 10, gap = 6;
-  const barH = rows[0].length > 1 ? 13 : 22, rowH = rows[0].length > 1 ? 44 : 34;
-  const H = padT + 8 + rows.length * rowH;
-  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-  svg.style.width = "100%"; svg.style.height = "auto";
-  svg.replaceChildren();
-  const max = Math.max(...rows.flatMap(r => r.slice(1))) || 1;
-  const plotW = W - padL - padR;
-  rows.forEach((r, i) => {
-    const y = padT + 8 + i * rowH;
-    const label = el("text", { x: padL - 10, y: y + (r.length - 1) * (barH + gap) / 2 + barH,
-                               "text-anchor": "end", "font-size": 13, fill: "#22272e" }, r[0]);
-    svg.appendChild(label);
-    r.slice(1).forEach((v, j) => {
-      const yy = y + j * (barH + gap);
-      const w = Math.max(1, v / max * plotW);
-      svg.appendChild(el("rect", { x: padL, y: yy, width: w, height: barH,
-                                   rx: 2, fill: colors[j] }));
-      svg.appendChild(el("text", { x: padL + w + 6, y: yy + barH - 2.5,
-                                   "font-size": 11.5, fill: "#57606a" }, vfmt(v)));
-    });
-  });
-}
-function setLegend(id, items) {
-  const e = document.getElementById(id);
-  e.innerHTML = items.map(s => `<span><i style="background:${s[1]}"></i>${s[0]}</span>`).join("");
-}
-const set = (id, txt) => { document.getElementById(id).textContent = txt; };
-const scope = () => sel.value === "__ALL__" ? null : sel.value;
-
-/* ---------- 4개 그래프 ---------- */
-function renderAll() {
-  const s = scope();
-  const label = s || "전체 (16개 시·도)";
-
-  /* 1. 업종별 가게 수 */
-  const indItems = s ? D.by_reg[s].ind : D.ind_total;
-  const indTot = s ? D.by_reg[s].total : D.total;
-  set("t1", `1. 업종별 가게 수 — ${label}`);
-  barChart(document.getElementById("c1"),
-           indItems.map(([k, v]) => [k, v]), [BLUE], v => fmt(v));
-  setLegend("l1", [["가게 수", BLUE]]);
-  const it2 = indItems.slice(0, 2);
-  set("n1", `※ ${it2[0][0]}(${fmt(it2[0][1])}개)·${it2[1][0]}(${fmt(it2[1][1])}개) 두 업종이 이 지역 전체의 ${pf(it2[0][1]+it2[1][1], indTot)}를 차지`);
-
-  /* 2. 지역별 가게 수 */
-  if (s) {
-    const gu = D.by_reg[s].gu;
-    set("t2", `2. ${s} 시·군·구별 가게 수`);
-    barChart(document.getElementById("c2"),
-             gu.map(([k, v]) => [k, v]), [BLUE], v => fmt(v));
-    set("n2", `※ 가장 많은 곳은 ${gu[0][0]}(${fmt(gu[0][1])}개, 이 지역의 ${pf(gu[0][1], D.by_reg[s].total)})이며, 시·군·구는 ${gu.length}곳`);
-  } else {
-    set("t2", "2. 지역(시·도)별 가게 수");
-    barChart(document.getElementById("c2"),
-             D.reg_total.map(([k, v]) => [k, v]), [BLUE], v => fmt(v));
-    const t2 = D.reg_total.slice(0, 2);
-    set("n2", `※ ${t2[0][0]}(${fmt(t2[0][1])}개)·${t2[1][0]}(${fmt(t2[1][1])}개)에 전체의 ${pf(t2[0][1]+t2[1][1], D.total)}가 몰려 있고 가장 적은 곳은 ${D.reg_total[D.reg_total.length-1][0]}(${fmt(D.reg_total[D.reg_total.length-1][1])}개)`);
-  }
-
-  /* 3. 지역과 업종 비교 (구성비 %) */
-  const natInd = Object.fromEntries(D.ind_total);
-  const natTot = D.total;
-  let rows3, colors3, names3;
-  if (s) {
-    const locInd = Object.fromEntries(D.by_reg[s].ind);
-    const locTot = D.by_reg[s].total;
-    const labels = D.ind_total.map(([k]) => k);
-    rows3 = labels.map(k => [k, pct(locInd[k] || 0, locTot), pct(natInd[k], natTot)]);
-    colors3 = [ORANGE, BLUE];
-    names3 = [[`${s} 구성비`, ORANGE], ["전국 평균 구성비", BLUE]];
-    let best = labels[0], diff = -1;
-    labels.forEach(k => {
-      const d = pct(locInd[k] || 0, locTot) - pct(natInd[k], natTot);
-      if (Math.abs(d) > diff) { diff = Math.abs(d); best = k; }
-    });
-    const bd = pct(locInd[best] || 0, locTot) - pct(natInd[best], natTot);
-    set("n3", `※ 전국 평균과 가장 다른 업종은 ${best}: 이 지역 ${pf(locInd[best]||0, locTot)} vs 전국 ${pf(natInd[best], natTot)} (${bd > 0 ? "+" : ""}${bd.toFixed(1)}%p)`);
-  } else {
-    rows3 = D.ind_total.map(([k, v]) => [k, pct(v, natTot)]);
-    colors3 = [BLUE]; names3 = [["전국 구성비", BLUE]];
-    set("n3", `※ 전국 기준 업종 구성비 — ${D.ind_total[0][0]}(${pf(D.ind_total[0][1], D.total)})·${D.ind_total[1][0]}(${pf(D.ind_total[1][1], D.total)}) 순`);
-  }
-  set("t3", `3. 지역과 업종 비교 (업종 구성비 %) — ${label}`);
-  barChart(document.getElementById("c3"), rows3, colors3, v => v.toFixed(1) + "%");
-  setLegend("l3", names3);
-
-  /* 4. 음식점 세부 종류 TOP 15 */
-  const foodItems = (s ? D.by_reg[s].food : D.food_total).slice(0, 15);
-  const foodTot = Object.values(s ? Object.fromEntries(D.by_reg[s].food) : Object.fromEntries(D.food_total))
-                        .reduce((a, b) => a + b, 0);
-  set("t4", `4. 음식점 세부 종류 TOP 15 (소분류) — ${label}`);
-  barChart(document.getElementById("c4"),
-           foodItems.map(([k, v]) => [k, v]), [BLUE], v => fmt(v));
-  set("n4", `※ 이 지역 음식점 ${fmt(foodTot)}개 중 1위는 ${foodItems[0][0]}(${fmt(foodItems[0][1])}개, ${pf(foodItems[0][1], foodTot)}), 뒤이어 ${foodItems[1][0]}(${fmt(foodItems[1][1])}개)`);
-}
-
-/* ---------- 분석 리포트 다운로드 ---------- */
-document.getElementById("reportBtn").addEventListener("click", function () {
-  const s = scope();
-  const label = s || "전체 (16개 시·도)";
-  const tot = s ? D.by_reg[s].total : D.total;
-  const ind = s ? D.by_reg[s].ind : D.ind_total;
-  const gu = s ? D.by_reg[s].gu : D.reg_total;
-  const food = s ? D.by_reg[s].food : D.food_total;
-  const foodTot = Object.values(Object.fromEntries(food)).reduce((a, b) => a + b, 0);
-  const natInd = Object.fromEntries(D.ind_total);
-  const L = [];
-  L.push("상가(상권)정보 분석 리포트");
-  L.push("=".repeat(46));
-  L.push(`대상 지역 : ${label}`);
-  L.push(`데이터    : 소상공인시장진흥공단 상가(상권)정보 202606 (정리본)`);
-  L.push(`생성일시  : ${new Date().toLocaleString("ko-KR")}`);
-  L.push("");
-  L.push("[전체 요약]");
-  L.push(`· 전체 가게 수 : ${fmt(D.total)}개 (업종 ${D.n_ind}개, 지역 ${D.n_reg}개)`);
-  L.push(`· 선택 지역 가게 수 : ${fmt(tot)}개 (전국의 ${pf(tot, D.total)})`);
-  L.push("");
-  L.push("[업종 구성]");
-  ind.slice(0, 3).forEach(([k, v], i) =>
-    L.push(`· ${i + 1}위 ${k}: ${fmt(v)}개 (${pf(v, tot)})`));
-  if (s) {
-    const diffs = ind.map(([k, v]) => [k, pct(v, tot) - pct(natInd[k], D.total)])
-                     .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
-    L.push(`· 전국 평균과 가장 다른 업종 : ${diffs[0][0]} (전국 대비 ${diffs[0][1] > 0 ? "+" : ""}${diffs[0][1].toFixed(1)}%p)`);
-  }
-  L.push("");
-  L.push(s ? "[시·군·구별]" : "[지역별]");
-  gu.slice(0, 3).forEach(([k, v], i) =>
-    L.push(`· ${i + 1}위 ${k}: ${fmt(v)}개 (${pf(v, tot)})`));
-  L.push("");
-  L.push("[음식점 세부 종류]");
-  L.push(`· 음식점 총 ${fmt(foodTot)}개 중 1위 ${food[0][0]} ${fmt(food[0][1])}개 (${pf(food[0][1], foodTot)}), 2위 ${food[1][0]} ${fmt(food[1][1])}개`);
-  L.push("");
-  L.push("[데이터 정리 이력]");
-  L.push("· 원본 2,772,484개 → 빈 열(동정보·호정보) 삭제, 층정보 숫자 통일,");
-  L.push("  주소 중복 표기 수정, '업소명없음'→'이름 없음' 처리");
-  L.push("· 좌표가 한국 밖인 가게 0건, 같은 가게 중복 23,379행 제외");
-  L.push("· 최종 2,749,105개 (원본 대비 -0.8%)");
-  L.push("");
-  L.push(`해석 : ${label}의 가게는 ${fmt(tot)}개로 전국의 ${pf(tot, D.total)}를 차지하며,`);
-  L.push(`${ind[0][0]}(${pf(ind[0][1], tot)})·${ind[1][0]}(${pf(ind[1][1], tot)}) 업종이 중심입니다.`);
-  L.push(`가게가 가장 많은 ${s ? "시·군·구" : "지역"}은 ${gu[0][0]}(${fmt(gu[0][1])}개)입니다.`);
-
-  const blob = new Blob(["\ufeff" + L.join("\n")], { type: "text/plain;charset=utf-8" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `분석리포트_${label.replace(/[\\/:*?"<>|]/g, "_")}.txt`;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-});
-
-renderAll();
 </script>
-
-
 </body></html>
